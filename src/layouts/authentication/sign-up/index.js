@@ -27,6 +27,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -35,6 +36,9 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 function Cover() {
+  const [successSB, setSuccessSB] = useState(false);
+  const closeSuccessSB = () => setSuccessSB(false);
+
   const [signUp, setSignUp] = useState({
     name: "",
     email: "",
@@ -56,16 +60,18 @@ function Cover() {
       // saving the encodedToken in the localStorage
 
       if (response.status === 201) {
+        alert("call");
         localStorage.setItem("token", response.data.encodedToken);
-        setMainState({ ...mainState, loginFalg: true });
-        navigate("/login", { replace: true });
+        // setMainState({ ...mainState, loginFalg: true });
+        setSuccessSB(true);
+        // navigate("/login", { replace: true });
       }
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <CoverLayout image={bgImage}>
+    <CoverLayout>
       <Card>
         <MDBox
           variant="gradient"
@@ -94,7 +100,6 @@ function Cover() {
                 value={signUp.name}
                 onChange={() => handleChange(event)}
                 label="Name"
-                variant="standard"
                 fullWidth
               />
             </MDBox>
@@ -105,7 +110,6 @@ function Cover() {
                 value={signUp.email}
                 label="Email"
                 onChange={() => handleChange(event)}
-                variant="standard"
                 fullWidth
               />
             </MDBox>
@@ -116,7 +120,6 @@ function Cover() {
                 value={signUp.password}
                 label="Password"
                 onChange={() => handleChange(event)}
-                variant="standard"
                 fullWidth
               />
             </MDBox>
@@ -143,7 +146,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton onClick={() => handleSignup()} variant="gradient" color="info" fullWidth>
-                sign in
+                sign up
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
@@ -163,6 +166,17 @@ function Cover() {
             </MDBox>
           </MDBox>
         </MDBox>
+        <MDSnackbar
+          color="success"
+          icon="check"
+          title="Account Created"
+          content="Sign Up Successful!"
+          dateTime="11 mins ago"
+          open={successSB}
+          onClose={closeSuccessSB}
+          close={closeSuccessSB}
+          bgGreen
+        />
       </Card>
     </CoverLayout>
   );

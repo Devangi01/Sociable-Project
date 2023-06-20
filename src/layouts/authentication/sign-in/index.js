@@ -17,6 +17,7 @@ import { useState } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -34,6 +35,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -46,6 +48,10 @@ function Basic() {
     email: "",
     password: "",
   });
+  const [errorSB, setErrorSB] = useState(false);
+  const closeErrorSB = () => setErrorSB(false);
+
+  const navigate = useNavigate();
 
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -53,11 +59,9 @@ function Basic() {
     setLogin({ ...login, [event.target.name]: event.target.value });
   };
   const encodedToken = localStorage.getItem("token");
-
   const handleClick = async () => {
-    alert("HE");
-
     console.log("Login State", login);
+    debugger;
     try {
       const response = await axios.post(`/api/auth/login`, {
         email: login.email,
@@ -66,53 +70,41 @@ function Basic() {
           authorization: encodedToken, // passing token as an authorization header
         },
       });
+
       console.log("loginResponse", response);
       if (response.status === 200) {
         console.log(response);
         localStorage.setItem("token", response.data.encodedToken);
         // setMainState({ ...mainState, isLoggedIn: true }); // Update isLoggedIn state in MainContext
-        // navigate("/dashboard", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     } catch (error) {
+      setErrorSB(true);
       console.log(error);
     }
   };
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   return (
-    <BasicLayout image={bgImage}>
+    <BasicLayout>
       <Card>
         <MDBox
           variant="gradient"
           bgColor="info"
           borderRadius="lg"
-          coloredShadow="info"
+          coloredShadow="success"
           mx={2}
           mt={-3}
-          p={2}
+          p={3}
           mb={1}
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Sign in
+            Sign In
           </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid>
+          <MDTypography display="block" variant="button" color="white" my={1}>
+            Enter your email and password to login
+          </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
@@ -170,6 +162,17 @@ function Basic() {
             </MDBox>
           </MDBox>
         </MDBox>
+        <MDSnackbar
+          color="error"
+          icon="warning"
+          title="Bad Credential"
+          content="Please enter valid email & password"
+          dateTime="11 mins ago"
+          open={errorSB}
+          onClose={closeErrorSB}
+          close={closeErrorSB}
+          bgRed
+        />
       </Card>
     </BasicLayout>
   );

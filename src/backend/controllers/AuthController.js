@@ -62,7 +62,6 @@ export const signupHandler = function (schema, request) {
  * */
 
 export const loginHandler = function (schema, request) {
-  debugger;
   const { username, password, email } = JSON.parse(request.requestBody);
   try {
     const foundUser = schema.users.findBy({ username: username });
