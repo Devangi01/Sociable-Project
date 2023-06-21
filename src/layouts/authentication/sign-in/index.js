@@ -45,7 +45,7 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function Basic() {
   const [login, setLogin] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [errorSB, setErrorSB] = useState(false);
@@ -64,7 +64,7 @@ function Basic() {
     debugger;
     try {
       const response = await axios.post(`/api/auth/login`, {
-        email: login.email,
+        username: login.username,
         password: login.password,
         headers: {
           authorization: encodedToken, // passing token as an authorization header
@@ -110,10 +110,10 @@ function Basic() {
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput
-                type="email"
-                label="Email"
-                name="email"
-                value={login.email}
+                type="text"
+                label="Username"
+                name="username"
+                value={login.username}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />

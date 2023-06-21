@@ -14,10 +14,15 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import React, { useContext, useState } from "react";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import MDInput from "components/MDInput";
+import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -34,86 +39,110 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import MDTypography from "components/MDTypography";
+import { MainContext } from "context";
 
 function Dashboard() {
+  const { mainstate, setMainstate } = useContext(MainContext);
   const { sales, tasks } = reportsLineChartData;
+  console.log("Dash", mainstate);
+
+  const [open, setOpen] = useState(false);
+  const closeSuccessSB = () => setOpen(false);
+
+  const [notification, setNotification] = useState({
+    color: "",
+    icon: "",
+    title: "",
+    content: "",
+  });
+
+  const [postcontent, setPostContent] = useState("");
+  const encodedToken = localStorage.getItem("token");
+
+  const addNewPost = async () => {
+    debugger;
+    try {
+      const response = await axios.post(
+        `/api/posts`,
+        {
+          content: postcontent,
+        },
+        {
+          headers: {
+            authorization: encodedToken, // passing token as an authorization header
+          },
+        }
+      );
+
+      debugger;
+      console.log("loginResponse", response);
+      if (response.status === 201) {
+        setNotification({
+          color: "success",
+          icon: "check",
+          title: response.status + " " + response.statusText,
+          content: "Post Created Successful!",
+        });
+        setOpen(true);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        {/* <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>
-          </Grid>
-        </Grid> */}
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  // chart={reportsBarChartData}
-                />
+            <Grid item xs={8}>
+              <MDBox style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
+                <Grid container spacing={1}>
+                  <Grid item xs={1}>
+                    ss
+                  </Grid>
+
+                  <Grid item xs={11}>
+                    <Grid
+                      container
+                      spacing={1}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <Grid item>
+                        <MDInput
+                          type="description"
+                          label="Description"
+                          name="description"
+                          multiline
+                          rows={3}
+                          fullWidth
+                          value={postcontent}
+                          onChange={(event) => setPostContent(event.target.value)}
+                        />
+                      </Grid>
+                      <Grid item style={{ display: "flex", flexDirection: "row-reverse" }}>
+                        <MDButton
+                          pt={5}
+                          variant="contained"
+                          color="info"
+                          onClick={() => addNewPost()}
+                        >
+                          Post
+                        </MDButton>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </MDBox>
             </Grid>
             {/* <Grid item xs={12} md={6} lg={4}>
@@ -155,6 +184,16 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
+      <MDSnackbar
+        color={notification.color}
+        icon={notification.icon}
+        title={notification.title}
+        content={notification.content}
+        open={open}
+        onClose={closeSuccessSB}
+        close={closeSuccessSB}
+        bgWhite
+      />
       <Footer />
     </DashboardLayout>
   );

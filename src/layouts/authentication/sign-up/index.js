@@ -36,13 +36,21 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 function Cover() {
-  const [successSB, setSuccessSB] = useState(false);
-  const closeSuccessSB = () => setSuccessSB(false);
+  const [open, setOpen] = useState(false);
+  const closeSuccessSB = () => setOpen(false);
 
   const [signUp, setSignUp] = useState({
-    name: "",
-    email: "",
+    firstName: "",
+    lastName: "",
+    username: "",
     password: "",
+  });
+
+  const [notification, setNotification] = useState({
+    color: "",
+    icon: "",
+    title: "",
+    content: "",
   });
 
   const handleChange = (event) => {
@@ -53,21 +61,35 @@ function Cover() {
     console.log(signUp);
     try {
       const response = await axios.post(`/api/auth/signup`, {
-        email: signUp.email,
+        firstName: signUp.firstName,
+        lastName: signUp.lastName,
+        username: signUp.username,
         password: signUp.password,
       });
       console.log(response);
       // saving the encodedToken in the localStorage
 
       if (response.status === 201) {
-        alert("call");
         localStorage.setItem("token", response.data.encodedToken);
-        // setMainState({ ...mainState, loginFalg: true });
-        setSuccessSB(true);
+
+        setNotification({
+          color: "success",
+          icon: "check",
+          title: "Account Created",
+          content: "Register Successful!",
+        });
+        setOpen(true);
         // navigate("/login", { replace: true });
       }
     } catch (error) {
       console.log(error);
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
     }
   };
   return (
@@ -93,22 +115,30 @@ function Cover() {
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", flexDirection: "row" }}>
               <MDInput
                 type="text"
-                name="name"
-                value={signUp.name}
+                name="firstName"
+                value={signUp.firstName}
                 onChange={() => handleChange(event)}
-                label="Name"
+                label="FirstName"
+                fullWidth
+              />{" "}
+              <MDInput
+                type="text"
+                name="lastName"
+                value={signUp.lastName}
+                onChange={() => handleChange(event)}
+                label="LastName"
                 fullWidth
               />
             </MDBox>
             <MDBox mb={2}>
               <MDInput
-                type="email"
-                name="email"
-                value={signUp.email}
-                label="Email"
+                type="text"
+                name="username"
+                value={signUp.username}
+                label="Username"
                 onChange={() => handleChange(event)}
                 fullWidth
               />
@@ -167,15 +197,14 @@ function Cover() {
           </MDBox>
         </MDBox>
         <MDSnackbar
-          color="success"
-          icon="check"
-          title="Account Created"
-          content="Sign Up Successful!"
-          dateTime="11 mins ago"
-          open={successSB}
+          color={notification.color}
+          icon={notification.icon}
+          title={notification.title}
+          content={notification.content}
+          open={open}
           onClose={closeSuccessSB}
           close={closeSuccessSB}
-          bgGreen
+          bgWhite
         />
       </Card>
     </CoverLayout>

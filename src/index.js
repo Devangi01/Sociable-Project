@@ -19,7 +19,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "App";
 
 // Material Dashboard 2 React Context Provider
-import { MaterialUIControllerProvider } from "context";
+import { MaterialUIControllerProvider, MainProvider } from "context";
+
 import { makeServer } from "./server";
 
 const container = document.getElementById("app");
@@ -30,8 +31,10 @@ makeServer();
 
 root.render(
   <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
+    <MainProvider>
+      <MaterialUIControllerProvider>
+        <App />
+      </MaterialUIControllerProvider>
+    </MainProvider>
   </BrowserRouter>
 );

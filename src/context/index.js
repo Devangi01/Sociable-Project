@@ -18,13 +18,16 @@ Coded by www.creative-tim.com
   you can customize the states for the different components here.
 */
 
-import { createContext, useContext, useReducer, useMemo } from "react";
+import React, { createContext, useContext, useReducer, useMemo, useState } from "react";
+import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // Material Dashboard 2 React main context
 const MaterialUI = createContext();
+
+const MainContext = createContext();
 
 // Setting custom name for the context which is visible on react dev tools
 MaterialUI.displayName = "MaterialUIContext";
@@ -91,6 +94,21 @@ function MaterialUIControllerProvider({ children }) {
 }
 
 // Material Dashboard 2 React custom hook for using context
+
+const MainProvider = ({ children }) => {
+  const [mainstate, setMainstate] = useState({
+    createPost: {
+      id: uuidv4(),
+      description: "",
+      dateandtime: new Date(),
+    },
+  });
+
+  return (
+    <MainContext.Provider value={{ mainstate, setMainstate }}> {children}</MainContext.Provider>
+  );
+};
+
 function useMaterialUIController() {
   const context = useContext(MaterialUI);
 
@@ -108,6 +126,9 @@ MaterialUIControllerProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+MainProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 // Context module functions
 const setMiniSidenav = (dispatch, value) => dispatch({ type: "MINI_SIDENAV", value });
 const setTransparentSidenav = (dispatch, value) => dispatch({ type: "TRANSPARENT_SIDENAV", value });
@@ -122,6 +143,8 @@ const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
 
 export {
   MaterialUIControllerProvider,
+  MainContext,
+  MainProvider,
   useMaterialUIController,
   setMiniSidenav,
   setTransparentSidenav,
