@@ -120,7 +120,7 @@ function Cover() {
                 type="text"
                 name="firstName"
                 value={signUp.firstName}
-                onChange={() => handleChange(event)}
+                onChange={() => handleChange()}
                 label="FirstName"
                 fullWidth
               />{" "}
@@ -128,7 +128,7 @@ function Cover() {
                 type="text"
                 name="lastName"
                 value={signUp.lastName}
-                onChange={() => handleChange(event)}
+                onChange={() => handleChange()}
                 label="LastName"
                 fullWidth
               />

@@ -75,7 +75,6 @@ function Dashboard() {
     try {
       const response = await axios.get(`/api/posts`);
 
-      console.log("After Get All Post", response);
       if (response.status === 200) {
         setDisplayPostData(response.data.posts);
       }
@@ -91,9 +90,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
-  console.log(">>>>>>>>>>>>>>>>>", displayPostData);
   const addNewPost = async () => {
-    debugger;
     try {
       const response = await axios.post(
         `/api/posts`,
@@ -107,8 +104,6 @@ function Dashboard() {
         }
       );
 
-      debugger;
-      console.log("loginResponse", response);
       if (response.status === 201) {
         getAllPost();
         setNotification({
@@ -131,12 +126,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
-  // const res = displayPostData.map((data) => {
-  //   console.log("display", data);
-  //   return null; // or return the JSX elements you want to render for each item
-  // });
 
-  // console.log("displayPostData", res);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -185,32 +175,6 @@ function Dashboard() {
                 </Grid>
               </MDBox>
             </Grid>
-            {/* <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid> */}
-            {/* <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid> */}
           </Grid>
         </MDBox>
         <MDBox>

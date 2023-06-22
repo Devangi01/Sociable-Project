@@ -60,8 +60,6 @@ function Basic() {
   };
   const encodedToken = localStorage.getItem("token");
   const handleClick = async () => {
-    console.log("Login State", login);
-    debugger;
     try {
       const response = await axios.post(`/api/auth/login`, {
         username: login.username,
@@ -70,10 +68,7 @@ function Basic() {
           authorization: encodedToken, // passing token as an authorization header
         },
       });
-
-      console.log("loginResponse", response);
       if (response.status === 200) {
-        console.log(response);
         localStorage.setItem("token", response.data.encodedToken);
         // setMainState({ ...mainState, isLoggedIn: true }); // Update isLoggedIn state in MainContext
         navigate("/dashboard", { replace: true });
