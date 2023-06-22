@@ -14,9 +14,16 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import ShareIcon from "@mui/icons-material/Share";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import axios from "axios";
+import Box from "@mui/material/Box";
+import MDAvatar from "components/MDAvatar";
+import team1 from "assets/images/team-1.jpg";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -58,8 +65,33 @@ function Dashboard() {
   });
 
   const [postcontent, setPostContent] = useState("");
+  const [displayPostData, setDisplayPostData] = useState([]);
   const encodedToken = localStorage.getItem("token");
 
+  useEffect(() => {
+    getAllPost();
+  }, []);
+  const getAllPost = async () => {
+    try {
+      const response = await axios.get(`/api/posts`);
+
+      console.log("After Get All Post", response);
+      if (response.status === 200) {
+        setDisplayPostData(response.data.posts);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
+  console.log(">>>>>>>>>>>>>>>>>", displayPostData);
   const addNewPost = async () => {
     debugger;
     try {
@@ -78,6 +110,7 @@ function Dashboard() {
       debugger;
       console.log("loginResponse", response);
       if (response.status === 201) {
+        getAllPost();
         setNotification({
           color: "success",
           icon: "check",
@@ -98,7 +131,12 @@ function Dashboard() {
       setOpen(true);
     }
   };
+  // const res = displayPostData.map((data) => {
+  //   console.log("display", data);
+  //   return null; // or return the JSX elements you want to render for each item
+  // });
 
+  // console.log("displayPostData", res);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -109,7 +147,9 @@ function Dashboard() {
               <MDBox style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
-                    ss
+                    <MDBox mr={2}>
+                      <MDAvatar src={team1} alt="something here" shadow="md" />
+                    </MDBox>
                   </Grid>
 
                   <Grid item xs={11}>
@@ -176,7 +216,78 @@ function Dashboard() {
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              <Projects />
+              {displayPostData.length > 0 && "Recent Post"}
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "420px",
+                  overflow: "auto",
+                  backgroundColor: "#f0f2f5",
+                  borderRadius: "10px",
+                }}
+              >
+                {displayPostData.length > 0 &&
+                  displayPostData.map((data) => (
+                    <MDBox
+                      key={data._id}
+                      style={{ backgroundColor: "white", borderRadius: "10px" }}
+                      mb={3}
+                      p={2}
+                    >
+                      <Grid container spacing={1}>
+                        <Grid item xs={1}>
+                          <MDBox mr={2}>
+                            <MDAvatar src={team1} alt="something here" shadow="md" />
+                          </MDBox>
+                        </Grid>
+
+                        <Grid item xs={11}>
+                          <Grid
+                            container
+                            spacing={1}
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <Grid item>
+                              <MDTypography>
+                                {data.firstName} {data.lastName}&nbsp;
+                                <small style={{ color: "#a09699" }}>@{data.username}</small>
+                              </MDTypography>
+                            </Grid>
+                            <Grid item>
+                              <MDInput
+                                type="description"
+                                label="Description"
+                                name="description"
+                                multiline
+                                rows={3}
+                                fullWidth
+                                value={data.content}
+                                disabled
+                                //  onChange={(event) => setPostContent(event.target.value)}
+                              />
+                            </Grid>
+                            <Grid item style={{ width: "100%" }}>
+                              <Grid container spacing={1}>
+                                <Grid style={{ textAlign: "left" }} item md={3}>
+                                  <FavoriteBorderIcon fontSize="medium"></FavoriteBorderIcon>
+                                </Grid>
+                                <Grid style={{ textAlign: "center" }} item md={3}>
+                                  <ShareIcon fontSize="medium"></ShareIcon>
+                                </Grid>
+                                <Grid style={{ textAlign: "center" }} item md={3}>
+                                  <ChatBubbleOutlineIcon fontSize="medium"></ChatBubbleOutlineIcon>
+                                </Grid>
+                                <Grid style={{ textAlign: "right" }} item md={3}>
+                                  <BookmarkBorderIcon fontSize="medium"></BookmarkBorderIcon>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </MDBox>
+                  ))}
+              </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />
