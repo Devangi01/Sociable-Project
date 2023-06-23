@@ -269,7 +269,7 @@ function Dashboard() {
         close={closeSuccessSB}
         bgWhite
       />
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

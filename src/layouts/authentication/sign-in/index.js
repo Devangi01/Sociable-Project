@@ -18,6 +18,7 @@ import { useState } from "react";
 // react-router-dom components
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -43,6 +44,10 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
+const formSchema = yup.object().shape({
+  username: yup.string().required("username is required"),
+  password: yup.string().required("password is required"),
+});
 function Basic() {
   const [login, setLogin] = useState({
     username: "",

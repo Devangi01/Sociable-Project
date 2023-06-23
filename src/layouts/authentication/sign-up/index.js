@@ -1,21 +1,6 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-router-dom components
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import * as yup from "yup";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -35,11 +20,26 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
+//create a validation schema
+const formSchema = yup.object().shape({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  username: yup.string().required("username name is required"),
+  password: yup.string().required("password is required"),
+});
+
 function Cover() {
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
 
   const [signUp, setSignUp] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
     username: "",
@@ -54,19 +54,31 @@ function Cover() {
   });
 
   const handleChange = (event) => {
-    setSignUp({ ...signUp, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(() => {
+        setErrors({ ...errors, [name]: "" });
+      })
+      .catch((error) => {
+        setErrors({ ...errors, [name]: error.message });
+      });
+    setSignUp({ ...signUp, [name]: value });
   };
 
   const handleSignup = async () => {
     console.log(signUp);
+
     try {
+      await formSchema.validate(signUp, { abortEarly: false });
       const response = await axios.post(`/api/auth/signup`, {
         firstName: signUp.firstName,
         lastName: signUp.lastName,
         username: signUp.username,
         password: signUp.password,
       });
-      console.log(response);
+
       // saving the encodedToken in the localStorage
 
       if (response.status === 201) {
@@ -82,14 +94,12 @@ function Cover() {
         // navigate("/login", { replace: true });
       }
     } catch (error) {
-      console.log(error);
-      setNotification({
-        color: "error",
-        icon: "warning",
-        title: error.response.status + " " + error.response.statusText + " ",
-        content: error.response.data.errors,
+      const validationErrors = {};
+      error.inner.forEach((err) => {
+        validationErrors[err.path] = err.message;
       });
-      setOpen(true);
+      setErrors(validationErrors);
+      console.log(error);
     }
   };
   return (
@@ -120,17 +130,23 @@ function Cover() {
                 type="text"
                 name="firstName"
                 value={signUp.firstName}
-                onChange={() => handleChange()}
+                onChange={handleChange}
                 label="FirstName"
                 fullWidth
+                error={Boolean(errors.firstName)}
+                helperText={errors.firstName}
+                errorColor="error"
               />{" "}
               <MDInput
                 type="text"
                 name="lastName"
                 value={signUp.lastName}
-                onChange={() => handleChange()}
+                onChange={handleChange}
                 label="LastName"
                 fullWidth
+                error={Boolean(errors.lastName)}
+                helperText={errors.lastName}
+                errorColor="error"
               />
             </MDBox>
             <MDBox mb={2}>
@@ -139,8 +155,11 @@ function Cover() {
                 name="username"
                 value={signUp.username}
                 label="Username"
-                onChange={() => handleChange(event)}
+                onChange={handleChange}
                 fullWidth
+                error={Boolean(errors.username)}
+                helperText={errors.username}
+                errorColor="error"
               />
             </MDBox>
             <MDBox mb={2}>
@@ -149,8 +168,11 @@ function Cover() {
                 name="password"
                 value={signUp.password}
                 label="Password"
-                onChange={() => handleChange(event)}
+                onChange={handleChange}
                 fullWidth
+                error={Boolean(errors.password)}
+                helperText={errors.password}
+                errorColor="error"
               />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
