@@ -20,6 +20,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import MDAvatar from "components/MDAvatar";
@@ -48,6 +49,8 @@ import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import MDTypography from "components/MDTypography";
 import { MainContext } from "context";
+import PolarChart from "examples/Charts/PolarChart";
+import PostCard from "./components/PostCard";
 
 function Dashboard() {
   const { mainstate, setMainstate } = useContext(MainContext);
@@ -71,6 +74,28 @@ function Dashboard() {
   useEffect(() => {
     getAllPost();
   }, []);
+
+  const getAllBookMarks = async () => {
+    try {
+      const response = await axios.get(`api/users/bookmark`, {
+        headers: {
+          authorization: encodedToken, // passing token as an authorization header
+        },
+      });
+
+      console.log("GettAllPost", response);
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      // setNotification({
+      //   color: "error",
+      //   icon: "warning",
+      //   title: error.response.status + " " + error.response.statusText + " ",
+      //   content: error.response.data.errors,
+      // });
+      // setOpen(true);
+    }
+  };
   const getAllPost = async () => {
     try {
       const response = await axios.get(`/api/posts`);
@@ -126,7 +151,6 @@ function Dashboard() {
       setOpen(true);
     }
   };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -191,66 +215,7 @@ function Dashboard() {
                 }}
               >
                 {displayPostData.length > 0 &&
-                  displayPostData.map((data) => (
-                    <MDBox
-                      key={data._id}
-                      style={{ backgroundColor: "white", borderRadius: "10px" }}
-                      mb={3}
-                      p={2}
-                    >
-                      <Grid container spacing={1}>
-                        <Grid item xs={1}>
-                          <MDBox mr={2}>
-                            <MDAvatar src={team1} alt="something here" shadow="md" />
-                          </MDBox>
-                        </Grid>
-
-                        <Grid item xs={11}>
-                          <Grid
-                            container
-                            spacing={1}
-                            style={{ display: "flex", flexDirection: "column" }}
-                          >
-                            <Grid item>
-                              <MDTypography>
-                                {data.firstName} {data.lastName}&nbsp;
-                                <small style={{ color: "#a09699" }}>@{data.username}</small>
-                              </MDTypography>
-                            </Grid>
-                            <Grid item>
-                              <MDInput
-                                type="description"
-                                label="Description"
-                                name="description"
-                                multiline
-                                rows={3}
-                                fullWidth
-                                value={data.content}
-                                disabled
-                                //  onChange={(event) => setPostContent(event.target.value)}
-                              />
-                            </Grid>
-                            <Grid item style={{ width: "100%" }}>
-                              <Grid container spacing={1}>
-                                <Grid style={{ textAlign: "left" }} item md={3}>
-                                  <FavoriteBorderIcon fontSize="medium"></FavoriteBorderIcon>
-                                </Grid>
-                                <Grid style={{ textAlign: "center" }} item md={3}>
-                                  <ShareIcon fontSize="medium"></ShareIcon>
-                                </Grid>
-                                <Grid style={{ textAlign: "center" }} item md={3}>
-                                  <ChatBubbleOutlineIcon fontSize="medium"></ChatBubbleOutlineIcon>
-                                </Grid>
-                                <Grid style={{ textAlign: "right" }} item md={3}>
-                                  <BookmarkBorderIcon fontSize="medium"></BookmarkBorderIcon>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </MDBox>
-                  ))}
+                  displayPostData.map((data) => <PostCard cardData={data} key={data._id} />)}
               </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
