@@ -97,11 +97,7 @@ function MaterialUIControllerProvider({ children }) {
 
 const MainProvider = ({ children }) => {
   const [mainstate, setMainstate] = useState({
-    createPost: {
-      id: uuidv4(),
-      description: "",
-      dateandtime: new Date(),
-    },
+    displayPostData: [],
   });
 
   return (

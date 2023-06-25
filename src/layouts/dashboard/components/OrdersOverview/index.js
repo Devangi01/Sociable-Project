@@ -14,11 +14,14 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import React, { useContext, useState, useEffect } from "react";
+
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Grid from "@mui/material/Grid";
 import team1 from "assets/images/team-1.jpg";
 import MDAvatar from "components/MDAvatar";
+import axios from "axios";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -27,7 +30,29 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 
-function OrdersOverview() {
+const OrdersOverview = () => {
+  const getAllUserInfo = async () => {
+    try {
+      const response = await axios.get(`api/users`);
+
+      console.log("getAllUserInfo", response);
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      // setNotification({
+      //   color: "error",
+      //   icon: "warning",
+      //   title: error.response.status + " " + error.response.statusText + " ",
+      //   content: error.response.data.errors,
+      // });
+      // setOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    getAllUserInfo();
+  }, []);
+
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox pt={3} px={3} style={{ display: "flex", justifyContent: "space-between" }}>
@@ -46,7 +71,12 @@ function OrdersOverview() {
           alignItems="center"
           justifyContent="center"
           textAlign="center"
-          style={{ borderRadius: "10px", backgroundColor: "black" }}
+          m={2}
+          style={{
+            width: "91%",
+            borderRadius: "10px",
+            boxShadow: "3px 3px 3px 3px grey",
+          }}
         >
           <Grid
             item
@@ -73,6 +103,6 @@ function OrdersOverview() {
       </MDBox>
     </Card>
   );
-}
+};
 
 export default OrdersOverview;

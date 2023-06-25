@@ -96,12 +96,14 @@ function Dashboard() {
       // setOpen(true);
     }
   };
-  const getAllPost = async () => {
+  const getAllPost = async (username) => {
     try {
-      const response = await axios.get(`/api/posts`);
+      debugger;
+      const response = await axios.get(`/api/posts/user/${username}`);
 
+      console.log("Get All Post", response);
       if (response.status === 200) {
-        setDisplayPostData(response.data.posts);
+        setMainstate({ ...mainstate, displayPostData: response.data.posts });
       }
     } catch (error) {
       // setErrorSB(true);
@@ -115,6 +117,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
+  console.log("Main state", mainstate);
   const addNewPost = async () => {
     try {
       const response = await axios.post(
@@ -130,7 +133,7 @@ function Dashboard() {
       );
 
       if (response.status === 201) {
-        getAllPost();
+        getAllPost(response.data.posts[response.data.posts.length - 1].username);
         setNotification({
           color: "success",
           icon: "check",
@@ -204,7 +207,7 @@ function Dashboard() {
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              {displayPostData.length > 0 && "Recent Post"}
+              {mainstate.displayPostData.length > 0 && "Recent Post"}
               <Box
                 sx={{
                   width: "100%",
@@ -214,8 +217,10 @@ function Dashboard() {
                   borderRadius: "10px",
                 }}
               >
-                {displayPostData.length > 0 &&
-                  displayPostData.map((data) => <PostCard cardData={data} key={data._id} />)}
+                {mainstate.displayPostData.length > 0 &&
+                  mainstate.displayPostData.map((data) => (
+                    <PostCard cardData={data} key={data._id} />
+                  ))}
               </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>

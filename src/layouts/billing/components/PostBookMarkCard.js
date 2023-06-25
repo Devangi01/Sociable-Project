@@ -20,7 +20,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 
-const PostCard = (props) => {
+const PostBookMarkCard = (props) => {
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
   const [isBookMarked, setIsBookMarked] = useState(false);
@@ -188,11 +188,13 @@ const PostCard = (props) => {
                     <BookmarkIcon
                       onClick={() => handleBookMarksClick(_id)}
                       fontSize="medium"
+                      style={{ cursor: "pointer" }}
                     ></BookmarkIcon>
                   ) : (
                     <BookmarkBorderIcon
                       onClick={() => handleBookMarksClick(_id)}
                       fontSize="medium"
+                      style={{ cursor: "pointer" }}
                     ></BookmarkBorderIcon>
                   )}
                 </Grid>
@@ -214,7 +216,7 @@ const PostCard = (props) => {
     </MDBox>
   );
 };
-PostCard.propTypes = {
+PostBookMarkCard.propTypes = {
   cardData: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
@@ -226,4 +228,4 @@ PostCard.propTypes = {
     updatedAt: PropTypes.string.isRequired,
   }).isRequired,
 };
-export default PostCard;
+export default PostBookMarkCard;

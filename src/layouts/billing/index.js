@@ -13,11 +13,26 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-// @mui material components
+// @mui material componentsimport React, { useContext, useState, useEffect } from "react";
+
+import React, { useContext, useState, useEffect } from "react";
+
 import Grid from "@mui/material/Grid";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import ShareIcon from "@mui/icons-material/Share";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import MDAvatar from "components/MDAvatar";
+import team1 from "assets/images/team-1.jpg";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import MDInput from "components/MDInput";
+import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 
 // Material Dashboard 2 React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -31,59 +46,92 @@ import PaymentMethod from "layouts/billing/components/PaymentMethod";
 import Invoices from "layouts/billing/components/Invoices";
 import BillingInformation from "layouts/billing/components/BillingInformation";
 import Transactions from "layouts/billing/components/Transactions";
+import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import PostCard from "layouts/dashboard/components/PostCard";
+import PostBookMarkCard from "./components/PostBookMarkCard";
 
-function Billing() {
+const Billing = () => {
+  const [open, setOpen] = useState(false);
+  const closeSuccessSB = () => setOpen(false);
+  const [isBookMarked, setIsBookMarked] = useState(false);
+  const [displayPostData, setDisplayPostData] = useState([]);
+
+  const [notification, setNotification] = useState({
+    color: "",
+    icon: "",
+    title: "",
+    content: "",
+  });
+
+  const encodedToken = localStorage.getItem("token");
+  const getAllBookMarks = async () => {
+    try {
+      const response = await axios.get(`api/users/bookmark`, {
+        headers: {
+          authorization: encodedToken, // passing token as an authorization header
+        },
+      });
+
+      console.log("GettAllPost", response);
+      if (response.status === 200) {
+        setDisplayPostData(response.data.bookmarks);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      // setNotification({
+      //   color: "error",
+      //   icon: "warning",
+      //   title: error.response.status + " " + error.response.statusText + " ",
+      //   content: error.response.data.errors,
+      // });
+      // setOpen(true);
+    }
+  };
+
+  getAllBookMarks();
+
   return (
     <DashboardLayout>
       <DashboardNavbar absolute isMini />
-      <MDBox mt={8}>
-        <MDBox mb={3}>
+      <MDBox py={3}>
+        <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={8}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} xl={6}>
-                  <MasterCard number={4562112245947852} holder="jack peterson" expires="11/22" />
-                </Grid>
-                <Grid item xs={12} md={6} xl={3}>
-                  <DefaultInfoCard
-                    icon="account_balance"
-                    title="salary"
-                    description="Belong Interactive"
-                    value="+$2000"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} xl={3}>
-                  <DefaultInfoCard
-                    icon="paypal"
-                    title="paypal"
-                    description="Freelance Payment"
-                    value="$455.00"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <PaymentMethod />
-                </Grid>
-              </Grid>
+            <Grid item xs={12} md={6} lg={8}>
+              {displayPostData && displayPostData.length > 0 && "Bookmark Post"}
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "420px",
+                  overflow: "auto",
+                  backgroundColor: "#f0f2f5",
+                  borderRadius: "10px",
+                }}
+              >
+                {displayPostData.length > 0 &&
+                  displayPostData.map((data) => (
+                    <PostBookMarkCard cardData={data} key={data._id} />
+                  ))}
+              </Box>
             </Grid>
-            <Grid item xs={12} lg={4}>
-              <Invoices />
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox mb={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={7}>
-              <BillingInformation />
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <Transactions />
+            <Grid item xs={12} md={6} lg={4}>
+              <OrdersOverview />
             </Grid>
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
+      <MDSnackbar
+        color={notification.color}
+        icon={notification.icon}
+        title={notification.title}
+        content={notification.content}
+        open={open}
+        onClose={closeSuccessSB}
+        close={closeSuccessSB}
+        bgWhite
+      />
     </DashboardLayout>
   );
-}
+};
 
 export default Billing;

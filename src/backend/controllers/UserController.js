@@ -113,7 +113,6 @@ export const getBookmarkPostsHandler = function (schema, request) {
  * */
 
 export const bookmarkPostHandler = function (schema, request) {
-  debugger;
   const { postId } = request.params;
   const post = schema.posts.findBy({ _id: postId }).attrs;
   const user = requiresAuth.call(this, request);
@@ -138,6 +137,8 @@ export const bookmarkPostHandler = function (schema, request) {
       content: post.content,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
     // this.db.users.update(
     //   { _id: user._id },

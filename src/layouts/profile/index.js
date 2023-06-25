@@ -59,9 +59,9 @@ function Overview() {
       <Header>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6} xl={4}>
+            {/* <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
               <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
               <ProfileInfoCard
@@ -95,12 +95,12 @@ function Overview() {
               />
               <Divider orientation="vertical" sx={{ mx: 0 }} />
             </Grid>
-            <Grid item xs={12} xl={4}>
+            {/* <Grid item xs={12} xl={4}>
               <ProfilesList title="conversations" profiles={profilesListData} shadow={false} />
-            </Grid>
+            </Grid> */}
           </Grid>
         </MDBox>
-        <MDBox pt={2} px={2} lineHeight={1.25}>
+        {/* <MDBox pt={2} px={2} lineHeight={1.25}>
           <MDTypography variant="h6" fontWeight="medium">
             Projects
           </MDTypography>
@@ -109,8 +109,8 @@ function Overview() {
               Architects design houses
             </MDTypography>
           </MDBox>
-        </MDBox>
-        <MDBox p={2}>
+        </MDBox> */}
+        {/* <MDBox p={2}>
           <Grid container spacing={6}>
             <Grid item xs={12} md={6} xl={3}>
               <DefaultProjectCard
@@ -193,9 +193,9 @@ function Overview() {
               />
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
       </Header>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

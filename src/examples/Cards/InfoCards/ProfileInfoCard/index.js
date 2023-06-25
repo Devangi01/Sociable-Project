@@ -1,21 +1,26 @@
 /**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+      =========================================================
+      * Material Dashboard 2 React - v2.2.0
+      =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+      * Product Page: https://www.creative-tim.com/product/material-dashboard-react
+      * Copyright 2023 Creative Tim (https://www.creative-tim.com)
 
-Coded by www.creative-tim.com
+      Coded by www.creative-tim.com
 
- =========================================================
+      =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+      * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+      */
 
 // react-routers components
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 // prop-types is library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -24,16 +29,34 @@ import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
-
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import MDAvatar from "components/MDAvatar";
 
 // Material Dashboard 2 React base styles
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
-
+import burceMars from "assets/images/bruce-mars.jpg";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 function ProfileInfoCard({ title, description, info, social, action, shadow }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const labels = [];
   const values = [];
   const { socialMediaColors } = colors;
@@ -84,6 +107,14 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     </MDBox>
   ));
 
+  const handleEditProfile = () => {
+    setOpen(!open);
+  };
+
+  const handleImageSelect = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
   return (
     <Card sx={{ height: "100%", boxShadow: !shadow && "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
@@ -92,7 +123,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
         </MDTypography>
         <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
           <Tooltip title={action.tooltip} placement="top">
-            <Icon>edit</Icon>
+            <Icon onClick={handleEditProfile}>edit</Icon>
           </Tooltip>
         </MDTypography>
       </MDBox>
@@ -115,6 +146,76 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
           </MDBox>
         </MDBox>
       </MDBox>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography>Avtar</Typography>
+            </Grid>
+            <Grid item xs={8} sx={{ position: "relative" }}>
+              <MDAvatar
+                src={burceMars}
+                alt="profile-image"
+                size="xl"
+                shadow="sm"
+                sx={{ cursor: "pointer" }}
+              >
+                <input
+                  accept="image/*"
+                  id="avatar-upload"
+                  type="file"
+                  onChange={handleImageSelect}
+                  style={{ display: "none" }}
+                />
+                <label
+                  htmlFor="avatar-upload"
+                  style={{ position: "absolute", bottom: "0", right: "0" }}
+                >
+                  <IconButton color="primary" aria-label="upload picture" component="span">
+                    <PhotoCamera />
+                  </IconButton>
+                  <PhotoCamera />
+                </label>
+              </MDAvatar>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Typography>Name</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography>Devangi</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>UserName</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography>username</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Bio</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography>Devangi</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography>Website</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography>Devangi</Typography>
+            </Grid>
+            <Grid item xs={12} style={{ display: "flex", flexDirection: "row-reverse" }}>
+              <Button variant="contained" style={{ color: "white" }}>
+                Update
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
     </Card>
   );
 }

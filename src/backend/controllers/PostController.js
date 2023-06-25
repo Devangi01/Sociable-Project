@@ -76,7 +76,6 @@ export const createPostHandler = function (schema, request) {
         }
       );
     }
-    debugger;
     const { content } = JSON.parse(request.requestBody);
     const post = {
       _id: uuid(),
