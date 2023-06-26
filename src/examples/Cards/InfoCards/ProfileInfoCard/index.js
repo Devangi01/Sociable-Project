@@ -15,6 +15,7 @@
 
 // react-routers components
 import React, { useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -37,6 +38,7 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 
 // Material Dashboard 2 React base styles
+import MDInput from "components/MDInput";
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import burceMars from "assets/images/bruce-mars.jpg";
@@ -51,8 +53,28 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+const editUserHandler = async () => {
+  try {
+    const response = await axios.post(`api/users/edit`, {
+      headers: {
+        authorization: encodedToken, // passing token as an authorization header
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const encodedToken = localStorage.getItem("token");
+  const [editUser, setEditUser] = useState({
+    firstName: "",
+    bio: "",
+    lastName: "",
+  });
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -115,6 +137,50 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     const file = event.target.files[0];
     setSelectedImage(file);
   };
+
+  const handleChange = (event) => {
+    setEditUser({ ...editUser, [event.target.name]: event.target.value });
+  };
+
+  const handleClick = async () => {
+    try {
+      const response = await axios.post(
+        `/api/users/edit`,
+        {
+          firstName: editUser.firstName,
+          lastName: editUser.lastName,
+          bio: editUser.bio,
+        },
+        {
+          headers: {
+            authorization: encodedToken, // passing token as an authorization header
+          },
+        }
+      );
+      console.log("editprofile", response);
+      if (response.status === 201) {
+        alert("Update");
+        // getAllPost(response.data.posts[response.data.posts.length - 1].username);
+        // setNotification({
+        //   color: "success",
+        //   icon: "check",
+        //   title: response.status + " " + response.statusText,
+        //   content: "Post Created Successful!",
+        // });
+        // setOpen(true);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      // setNotification({
+      //   color: "error",
+      //   icon: "warning",
+      //   title: error.response.status + " " + error.response.statusText + " ",
+      //   content: error.response.data.errors,
+      // });
+      // setOpen(true);
+    }
+  };
   return (
     <Card sx={{ height: "100%", boxShadow: !shadow && "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
@@ -172,44 +238,62 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
                   onChange={handleImageSelect}
                   style={{ display: "none" }}
                 />
-                <label
-                  htmlFor="avatar-upload"
-                  style={{ position: "absolute", bottom: "0", right: "0" }}
-                >
+                <label htmlFor="avatar-upload" style={{ position: "absolute", top: 0, right: 0 }}>
                   <IconButton color="primary" aria-label="upload picture" component="span">
                     <PhotoCamera />
                   </IconButton>
-                  <PhotoCamera />
                 </label>
               </MDAvatar>
             </Grid>
-
-            <Grid item xs={4}>
-              <Typography>Name</Typography>
+            <Grid item xs={12} sm={4}>
+              <Typography>First Name</Typography>
             </Grid>
-            <Grid item xs={8}>
-              <Typography>Devangi</Typography>
+            <Grid item xs={12} sm={8}>
+              <MDInput
+                type="text"
+                name="firstName"
+                value={editUser.firstName}
+                onChange={(event) => handleChange(event)}
+                fullWidth
+              />
             </Grid>
-            <Grid item xs={4}>
-              <Typography>UserName</Typography>
+            <Grid item xs={12} sm={4}>
+              <Typography>Last Name</Typography>
             </Grid>
-            <Grid item xs={8}>
-              <Typography>username</Typography>
+            <Grid item xs={12} sm={8}>
+              <MDInput
+                type="text"
+                name="lastName"
+                value={editUser.lastName}
+                onChange={(event) => handleChange(event)}
+                fullWidth
+              />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Typography>Bio</Typography>
             </Grid>
-            <Grid item xs={8}>
-              <Typography>Devangi</Typography>
+            <Grid item xs={12} sm={8}>
+              <MDInput
+                type="text"
+                name="bio"
+                value={editUser.bio}
+                onChange={(event) => handleChange(event)}
+                fullWidth
+              />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Typography>Website</Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={8}>
               <Typography>Devangi</Typography>
             </Grid>
-            <Grid item xs={12} style={{ display: "flex", flexDirection: "row-reverse" }}>
-              <Button variant="contained" style={{ color: "white" }}>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ color: "white" }}
+                onClick={() => handleClick()}
+              >
                 Update
               </Button>
             </Grid>
