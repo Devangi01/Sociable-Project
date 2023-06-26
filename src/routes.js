@@ -62,7 +62,7 @@ const routes = [
     name: "Explore",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
+    route: "/explore",
     component: <Tables />,
   },
   {
@@ -70,7 +70,7 @@ const routes = [
     name: "BookMark",
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
+    route: "/bookmark",
     component: <Billing />,
   },
   {
@@ -80,14 +80,6 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
-  },
-  {
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
   },
   {
     type: "collapse",
