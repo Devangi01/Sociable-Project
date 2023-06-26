@@ -55,7 +55,6 @@ import PostCard from "./components/PostCard";
 function Dashboard() {
   const { mainstate, setMainstate } = useContext(MainContext);
   const { sales, tasks } = reportsLineChartData;
-  console.log("Dash", mainstate);
 
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
@@ -68,12 +67,7 @@ function Dashboard() {
   });
 
   const [postcontent, setPostContent] = useState("");
-  const [displayPostData, setDisplayPostData] = useState([]);
   const encodedToken = localStorage.getItem("token");
-
-  useEffect(() => {
-    getAllPost();
-  }, []);
 
   const getAllBookMarks = async () => {
     try {
@@ -82,11 +76,8 @@ function Dashboard() {
           authorization: encodedToken, // passing token as an authorization header
         },
       });
-
-      console.log("GettAllPost", response);
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
       // setNotification({
       //   color: "error",
       //   icon: "warning",
@@ -101,13 +92,12 @@ function Dashboard() {
       debugger;
       const response = await axios.get(`/api/posts/user/${username}`);
 
-      console.log("Get All Post", response);
       if (response.status === 200) {
         setMainstate({ ...mainstate, displayPostData: response.data.posts });
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
+
       setNotification({
         color: "error",
         icon: "warning",
@@ -117,7 +107,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
-  console.log("Main state", mainstate);
+
   const addNewPost = async () => {
     try {
       const response = await axios.post(
@@ -144,7 +134,7 @@ function Dashboard() {
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
+
       setNotification({
         color: "error",
         icon: "warning",
@@ -154,6 +144,8 @@ function Dashboard() {
       setOpen(true);
     }
   };
+
+  console.log(mainstate);
   return (
     <DashboardLayout>
       <DashboardNavbar />

@@ -12,6 +12,8 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 
@@ -37,6 +39,7 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import { MainContext } from "context";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -49,6 +52,8 @@ const formSchema = yup.object().shape({
   password: yup.string().required("password is required"),
 });
 function Basic() {
+  const { mainstate, setMainstate } = useContext(MainContext);
+
   const [login, setLogin] = useState({
     username: "",
     password: "",
@@ -75,12 +80,12 @@ function Basic() {
       });
       if (response.status === 200) {
         localStorage.setItem("token", response.data.encodedToken);
+        setMainstate({ ...mainstate, displayPostData: [] });
         // setMainState({ ...mainState, isLoggedIn: true }); // Update isLoggedIn state in MainContext
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {
       setErrorSB(true);
-      console.log(error);
     }
   };
   const handleSetRememberMe = () => setRememberMe(!rememberMe);

@@ -34,11 +34,8 @@ const OrdersOverview = () => {
   const getAllUserInfo = async () => {
     try {
       const response = await axios.get(`api/users`);
-
-      console.log("getAllUserInfo", response);
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
       // setNotification({
       //   color: "error",
       //   icon: "warning",

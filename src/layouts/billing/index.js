@@ -49,6 +49,7 @@ import Transactions from "layouts/billing/components/Transactions";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import PostCard from "layouts/dashboard/components/PostCard";
 import PostBookMarkCard from "./components/PostBookMarkCard";
+import MDTypography from "components/MDTypography";
 
 const Billing = () => {
   const [open, setOpen] = useState(false);
@@ -72,13 +73,11 @@ const Billing = () => {
         },
       });
 
-      console.log("GettAllPost", response);
       if (response.status === 200) {
         setDisplayPostData(response.data.bookmarks);
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
       // setNotification({
       //   color: "error",
       //   icon: "warning",
@@ -93,7 +92,10 @@ const Billing = () => {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar absolute isMini />
+      <DashboardNavbar />
+      <MDBox mt={4.5}>
+        <MDTypography>Filter Section</MDTypography>
+      </MDBox>
       <MDBox py={3}>
         <MDBox>
           <Grid container spacing={3}>

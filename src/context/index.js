@@ -98,6 +98,7 @@ function MaterialUIControllerProvider({ children }) {
 const MainProvider = ({ children }) => {
   const [mainstate, setMainstate] = useState({
     displayPostData: [],
+    displayAllUserPostData: [],
   });
 
   return (
