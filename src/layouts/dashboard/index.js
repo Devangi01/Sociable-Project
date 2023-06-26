@@ -199,7 +199,18 @@ function Dashboard() {
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              {mainstate.displayPostData.length > 0 && "Recent Post"}
+              <Grid
+                container
+                style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+                xs={12}
+                md={12}
+                lg={12}
+              >
+                <Grid item>{mainstate.displayPostData.length > 0 && "Recent Post"}</Grid>
+                <Grid item>{mainstate.displayPostData.length > 0 && "Filter Option"}</Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={6} lg={8}>
               <Box
                 sx={{
                   width: "100%",

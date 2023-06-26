@@ -69,11 +69,11 @@ function Basic() {
     setLogin({ ...login, [event.target.name]: event.target.value });
   };
   const encodedToken = localStorage.getItem("token");
-  const handleClick = async () => {
+  const handleClick = async (loginUser) => {
     try {
       const response = await axios.post(`/api/auth/login`, {
-        username: login.username,
-        password: login.password,
+        username: loginUser === "guestLogin" ? "guest" : login.username,
+        password: loginUser === "guestLogin" ? "guest@123" : login.password,
         headers: {
           authorization: encodedToken, // passing token as an authorization header
         },
@@ -146,9 +146,32 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" onClick={() => handleClick()} fullWidth>
-                sign in
-              </MDButton>
+              <Grid
+                container
+                style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+                spacing={1}
+              >
+                <Grid item lg={6} sx={4}>
+                  <MDButton
+                    variant="gradient"
+                    fullWidth
+                    color="info"
+                    onClick={() => handleClick("userLogin")}
+                  >
+                    Log in
+                  </MDButton>
+                </Grid>
+                <Grid item lg={6} sx={8}>
+                  <MDButton
+                    variant="gradient"
+                    color="info"
+                    onClick={() => handleClick("guestLogin")}
+                    fullWidth
+                  >
+                    Login as guest
+                  </MDButton>
+                </Grid>
+              </Grid>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
