@@ -34,7 +34,7 @@ const PostCard = (props) => {
 
   const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } =
     props.cardData;
-  console.log("Inside The Post Card");
+
   const encodedToken = localStorage.getItem("token");
 
   const getAllBookMarks = async () => {
@@ -45,14 +45,12 @@ const PostCard = (props) => {
         },
       });
 
-      console.log("GettAllPost", response);
       const bookmarkData = response.data.bookmarks.filter((data) => data._id === _id);
       if (bookmarkData.length > 0) {
         setIsBookMarked(true);
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
       // setNotification({
       //   color: "error",
       //   icon: "warning",
@@ -83,7 +81,6 @@ const PostCard = (props) => {
         }
       );
 
-      console.log("remove book mark bookmark", response);
       if (response.status === 200) {
         setIsBookMarked(false);
         setNotification({
@@ -96,7 +93,7 @@ const PostCard = (props) => {
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
+
       setNotification({
         color: "error",
         icon: "warning",
@@ -119,7 +116,6 @@ const PostCard = (props) => {
         }
       );
 
-      console.log("bookmark", response);
       if (response.status === 200) {
         setNotification({
           color: "success",
@@ -131,7 +127,7 @@ const PostCard = (props) => {
       }
     } catch (error) {
       // setErrorSB(true);
-      console.log(error);
+
       setNotification({
         color: "error",
         icon: "warning",

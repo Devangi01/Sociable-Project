@@ -1,3 +1,4 @@
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import * as yup from "yup";
@@ -13,6 +14,7 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import { MainContext } from "context";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -29,6 +31,7 @@ const formSchema = yup.object().shape({
 });
 
 function Cover() {
+  const { mainstate, setMainstate } = useContext(MainContext);
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
 
@@ -68,8 +71,6 @@ function Cover() {
   };
 
   const handleSignup = async () => {
-    console.log(signUp);
-
     try {
       await formSchema.validate(signUp, { abortEarly: false });
       const response = await axios.post(`/api/auth/signup`, {
@@ -91,6 +92,7 @@ function Cover() {
           content: "Register Successful!",
         });
         setOpen(true);
+        setMainstate({ ...mainstate, displayPostData: [] });
         // navigate("/login", { replace: true });
       }
     } catch (error) {
@@ -99,7 +101,6 @@ function Cover() {
         validationErrors[err.path] = err.message;
       });
       setErrors(validationErrors);
-      console.log(error);
     }
   };
   return (
