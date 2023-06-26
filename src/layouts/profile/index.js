@@ -18,9 +18,10 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 
 // @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -70,13 +71,13 @@ function Overview() {
                 info={{
                   fullName: "Alec M. Thompson",
                   mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
+                  email: "devangibhutiya@gmail.com",
                   location: "USA",
                 }}
                 social={[
                   {
                     link: "https://www.facebook.com/CreativeTim/",
-                    icon: <FacebookIcon />,
+                    icon: <LinkedInIcon />,
                     color: "facebook",
                   },
                   {
@@ -87,6 +88,11 @@ function Overview() {
                   {
                     link: "https://www.instagram.com/creativetimofficial/",
                     icon: <InstagramIcon />,
+                    color: "instagram",
+                  },
+                  {
+                    link: "https://www.instagram.com/creativetimofficial/",
+                    icon: <GitHubIcon />,
                     color: "instagram",
                   },
                 ]}
