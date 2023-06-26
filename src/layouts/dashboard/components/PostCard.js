@@ -157,8 +157,7 @@ const PostCard = (props) => {
             </Grid>
             <Grid item>
               <MDInput
-                type="description"
-                label="Description"
+                type="text"
                 name="description"
                 multiline
                 rows={3}

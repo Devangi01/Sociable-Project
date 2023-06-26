@@ -99,6 +99,7 @@ const MainProvider = ({ children }) => {
   const [mainstate, setMainstate] = useState({
     displayPostData: [],
     displayAllUserPostData: [],
+    allUserlist: [],
   });
 
   return (

@@ -145,7 +145,7 @@ function Dashboard() {
     }
   };
 
-  console.log(mainstate);
+  console.log("Dashboard", mainstate.displayPostData);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -206,8 +206,10 @@ function Dashboard() {
                 md={12}
                 lg={12}
               >
-                <Grid item>{mainstate.displayPostData.length > 0 && "Recent Post"}</Grid>
-                <Grid item>{mainstate.displayPostData.length > 0 && "Filter Option"}</Grid>
+                <Grid item>
+                  {" "}
+                  <MDTypography>Recent Post</MDTypography>{" "}
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} md={6} lg={8}>
@@ -220,7 +222,7 @@ function Dashboard() {
                   borderRadius: "10px",
                 }}
               >
-                {mainstate.displayPostData.length > 0 &&
+                {mainstate.displayPostData &&
                   mainstate.displayPostData.map((data) => (
                     <PostCard cardData={data} key={data._id} />
                   ))}

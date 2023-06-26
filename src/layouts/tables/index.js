@@ -101,7 +101,7 @@ function Tables() {
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              {mainstate.displayAllUserPostData.length > 0 && "Explore Post"}
+              {mainstate.displayAllUserPostData && "Explore Post"}
               <Box
                 sx={{
                   width: "100%",
@@ -111,7 +111,7 @@ function Tables() {
                   borderRadius: "10px",
                 }}
               >
-                {mainstate.displayAllUserPostData.length > 0 &&
+                {mainstate.displayAllUserPostData &&
                   mainstate.displayAllUserPostData.map((data) => (
                     <PostCard cardData={data} key={data._id} />
                   ))}
