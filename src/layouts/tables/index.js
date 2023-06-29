@@ -68,7 +68,6 @@ function Tables() {
 
   const getAllUserPost = async () => {
     try {
-      debugger;
       const response = await axios.get(`/api/posts`);
 
       if (response.status === 200) {

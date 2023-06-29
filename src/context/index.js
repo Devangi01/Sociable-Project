@@ -100,6 +100,8 @@ const MainProvider = ({ children }) => {
     displayPostData: [],
     displayAllUserPostData: [],
     allUserlist: [],
+    userFollowlist: [],
+    loggedUser: {},
   });
 
   return (

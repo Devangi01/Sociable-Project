@@ -30,6 +30,8 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
+import { useContext } from "react";
+import { MainContext } from "context";
 
 // Material Dashboard 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
@@ -38,9 +40,13 @@ import breakpoints from "assets/theme/base/breakpoints";
 import burceMars from "assets/images/bruce-mars.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
-function Header({ children }) {
+function Header({ children, data }) {
+  console.log("children", data);
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
+  const { mainstate, setMainstate } = useContext(MainContext);
+
+  // const userData = props.data;
 
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
@@ -63,6 +69,7 @@ function Header({ children }) {
   }, [tabsOrientation]);
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+  // const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } = props.data;
 
   return (
     <MDBox position="relative" mb={5}>
@@ -99,13 +106,30 @@ function Header({ children }) {
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
               <MDTypography variant="h5" fontWeight="medium">
-                Richard Davis
+                {data.firstName} {data.lastName}
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="regular">
-                CEO / Co-Founder
+                @{data.username}
               </MDTypography>
+              <MDBox
+                height="100%"
+                mt={0.5}
+                lineHeight={1}
+                style={{ display: "flex", flexDiretion: "row" }}
+              >
+                <MDTypography variant="button" mr={3} color="text" fontWeight="regular">
+                  {mainstate.displayPostData && `${mainstate.displayPostData.length} Post`}
+                </MDTypography>
+                <MDTypography variant="button" mr={3} color="text" fontWeight="regular">
+                  {data.followers && `${data.followers.length} Followers`}
+                </MDTypography>
+                <MDTypography variant="button" mr={3} color="text" fontWeight="regular">
+                  {data.following && `${data.following.length} Following`}
+                </MDTypography>
+              </MDBox>
             </MDBox>
           </Grid>
+
           {/* <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs orientation={tabsOrientation} value={tabValue} onChange={handleSetTabValue}>
@@ -151,6 +175,7 @@ Header.defaultProps = {
 // Typechecking props for the Header
 Header.propTypes = {
   children: PropTypes.node,
+  data: PropTypes.object,
 };
 
 export default Header;

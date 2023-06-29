@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -19,11 +20,14 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import { MainContext } from "context";
 
 const PostCard = (props) => {
+  const { mainstate, setMainstate } = useContext(MainContext);
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   const [notification, setNotification] = useState({
     color: "",
@@ -32,10 +36,37 @@ const PostCard = (props) => {
     content: "",
   });
 
-  const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } =
+  const { _id, content, likes, firstName, lastName, createdAt, updatedAt, username } =
     props.cardData;
+  console.log("Likes In PostCard", likes);
+  console.log("Username In PostCard", username);
+  console.log("Main Context", mainstate.loggedUser);
 
   const encodedToken = localStorage.getItem("token");
+
+  const checkISLiked =
+    likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
+  console.log("Check Result", checkISLiked);
+
+  const getAllPost = async (username) => {
+    try {
+      const response = await axios.get(`/api/posts/user/${username}`);
+
+      if (response.status === 200) {
+        setMainstate({ ...mainstate, displayPostData: response.data.posts });
+      }
+    } catch (error) {
+      // setErrorSB(true);
+
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
 
   const getAllBookMarks = async () => {
     try {
@@ -104,6 +135,26 @@ const PostCard = (props) => {
     }
   };
 
+  const getAllUserPost = async () => {
+    try {
+      const response = await axios.get(`/api/posts`);
+
+      if (response.status === 200) {
+        setMainstate({ ...mainstate, displayAllUserPostData: response.data.posts });
+      }
+    } catch (error) {
+      // setErrorSB(true);
+
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
+
   const addToBookmark = async (id) => {
     try {
       const response = await axios.post(
@@ -138,6 +189,53 @@ const PostCard = (props) => {
     }
   };
 
+  const handlePostLikeClick = async (id, checkStatus) => {
+    try {
+      const response = await axios.post(
+        checkStatus === "like" ? `/api/posts/like/${id}` : `/api/posts/dislike/${id}`,
+        {},
+        {
+          headers: {
+            authorization: encodedToken, // passing token as an authorization header
+          },
+        }
+      );
+      if (response.status === 201) {
+        getAllPost(mainstate.loggedUser.username);
+        getAllUserPost();
+        console.log("After Like", response);
+        // setMainstate({
+        //   ...mainstate,
+        //   displayPostData: response.data.posts,
+        // });
+        // setNotification({
+        //   color: "success",
+        //   icon: "check",
+        //   title: response.status + " " + response.statusText,
+        //   content:
+        //     checkStatus === "follow"
+        //       ? "Now you are following to " +
+        //         response.data.followUser.firstName +
+        //         response.data.followUser.lastName
+        //       : "You are unfollowing to " +
+        //         response.data.followUser.firstName +
+        //         " " +
+        //         response.data.followUser.lastName,
+        // });
+        // setOpen(true);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+      console.log(error);
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
   return (
     <MDBox key={_id} style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
       <Grid container spacing={1}>
@@ -169,8 +267,21 @@ const PostCard = (props) => {
             </Grid>
             <Grid item style={{ width: "100%" }}>
               <Grid container spacing={1}>
-                <Grid style={{ textAlign: "left" }} item md={3}>
-                  <FavoriteBorderIcon fontSize="medium"></FavoriteBorderIcon>
+                <Grid style={{ textAlign: "left", display: "flex", flexWrap: "wrap" }} item md={3}>
+                  {checkISLiked ? (
+                    <FavoriteIcon
+                      fontSize="medium"
+                      style={{ cursor: "pointer", color: "#ed3939" }}
+                      onClick={() => handlePostLikeClick(_id, "unlike")}
+                    ></FavoriteIcon>
+                  ) : (
+                    <FavoriteBorderIcon
+                      fontSize="medium"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handlePostLikeClick(_id, "like")}
+                    ></FavoriteBorderIcon>
+                  )}
+                  <span style={{ fontSize: "15px", marginLeft: "7px" }}>{likes.likeCount}</span>
                 </Grid>
                 <Grid style={{ textAlign: "center" }} item md={3}>
                   <ShareIcon fontSize="medium"></ShareIcon>

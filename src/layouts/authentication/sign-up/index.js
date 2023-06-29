@@ -78,6 +78,9 @@ function Cover() {
         lastName: signUp.lastName,
         username: signUp.username,
         password: signUp.password,
+        bio: "Hi, I’m Alec default, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).",
+        email: "tempemail@gmail.com",
+        location: "UAE",
       });
 
       // saving the encodedToken in the localStorage

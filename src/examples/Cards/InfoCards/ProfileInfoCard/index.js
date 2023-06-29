@@ -217,11 +217,14 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        style={{ borderRadius: "100px" }}
       >
         <Box sx={style}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
-              <Typography>Avtar</Typography>
+              <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
+                Avtar
+              </MDTypography>
             </Grid>
             <Grid item xs={8} sx={{ position: "relative" }}>
               <MDAvatar
@@ -245,47 +248,48 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
                 </label>
               </MDAvatar>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Typography>First Name</Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={6} sm={6}>
               <MDInput
                 type="text"
                 name="firstName"
+                label="First Name"
                 value={editUser.firstName}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Typography>Last Name</Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
+
+            <Grid item xs={6} sm={6}>
               <MDInput
                 type="text"
                 name="lastName"
+                label="Last Name"
                 value={editUser.lastName}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Typography>Bio</Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
+
+            <Grid item xs={6} sm={6}>
               <MDInput
                 type="text"
                 name="bio"
+                label="Bio"
                 value={editUser.bio}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Typography>Website</Typography>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <Typography>Devangi</Typography>
+
+            <Grid item xs={6} sm={6}>
+              <MDInput
+                type="text"
+                name="email"
+                label="Email"
+                value={editUser.bio}
+                onChange={(event) => handleChange(event)}
+                fullWidth
+              />
             </Grid>
             <Grid item xs={12}>
               <Button
