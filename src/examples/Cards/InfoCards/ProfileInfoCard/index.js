@@ -73,6 +73,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     firstName: "",
     bio: "",
     lastName: "",
+    email: "",
   });
 
   const [open, setOpen] = React.useState(false);
@@ -150,6 +151,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
           firstName: editUser.firstName,
           lastName: editUser.lastName,
           bio: editUser.bio,
+          email: editUser.email,
         },
         {
           headers: {
@@ -286,7 +288,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
                 type="text"
                 name="email"
                 label="Email"
-                value={editUser.bio}
+                value={editUser.email}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />

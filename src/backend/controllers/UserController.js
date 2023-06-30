@@ -42,6 +42,7 @@ export const getUserHandler = function (schema, request) {
  * */
 
 export const editUserHandler = function (schema, request) {
+  debugger;
   let user = requiresAuth.call(this, request);
   try {
     if (!user) {
@@ -53,7 +54,7 @@ export const editUserHandler = function (schema, request) {
         }
       );
     }
-    const { userData } = JSON.parse(request.requestBody);
+    const userData = JSON.parse(request.requestBody);
 
     if (userData && userData.username && userData.username !== user.username) {
       return new Response(
