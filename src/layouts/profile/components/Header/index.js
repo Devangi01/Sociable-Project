@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -45,6 +45,8 @@ function Header({ children, data }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
   const { mainstate, setMainstate } = useContext(MainContext);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   // const userData = props.data;
 
@@ -70,7 +72,7 @@ function Header({ children, data }) {
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
   // const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } = props.data;
-
+  var img = "favicon.png";
   return (
     <MDBox position="relative" mb={5}>
       <MDBox
@@ -101,7 +103,7 @@ function Header({ children, data }) {
       >
         <Grid container spacing={3} alignItems="center">
           <Grid item>
-            <MDAvatar src={burceMars} alt="profile-image" size="xl" shadow="sm" />
+            <MDAvatar src={`${img}`} alt="profile-image" size="xl" shadow="sm" />
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>

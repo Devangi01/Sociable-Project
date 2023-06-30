@@ -94,9 +94,6 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <MDBox mt={4.5}>
-          <MDTypography>Filter Section</MDTypography>
-        </MDBox>
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>

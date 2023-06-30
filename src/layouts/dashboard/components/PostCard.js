@@ -50,6 +50,7 @@ const PostCard = (props) => {
 
   const getAllPost = async (username) => {
     try {
+      debugger;
       const response = await axios.get(`/api/posts/user/${username}`);
 
       if (response.status === 200) {

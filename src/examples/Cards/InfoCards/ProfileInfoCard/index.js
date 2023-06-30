@@ -14,7 +14,7 @@
       */
 
 // react-routers components
-import React, { useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -42,6 +42,7 @@ import MDInput from "components/MDInput";
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import burceMars from "assets/images/bruce-mars.jpg";
+import { MainContext } from "context";
 const style = {
   position: "absolute",
   top: "50%",
@@ -54,20 +55,11 @@ const style = {
   p: 4,
 };
 
-const editUserHandler = async () => {
-  try {
-    const response = await axios.post(`api/users/edit`, {
-      headers: {
-        authorization: encodedToken, // passing token as an authorization header
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const { mainstate, setMainstate } = useContext(MainContext);
   const encodedToken = localStorage.getItem("token");
   const [editUser, setEditUser] = useState({
     firstName: "",
@@ -134,11 +126,6 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     setOpen(!open);
   };
 
-  const handleImageSelect = (event) => {
-    const file = event.target.files[0];
-    setSelectedImage(file);
-  };
-
   const handleChange = (event) => {
     setEditUser({ ...editUser, [event.target.name]: event.target.value });
   };
@@ -159,9 +146,11 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
           },
         }
       );
+      debugger;
       console.log("editprofile", response);
       if (response.status === 201) {
-        alert("Update");
+        // alert("Update");
+        setMainstate({ ...mainstate, loggedUser: response.data.user });
         // getAllPost(response.data.posts[response.data.posts.length - 1].username);
         // setNotification({
         //   color: "success",
@@ -181,6 +170,28 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
       //   content: error.response.data.errors,
       // });
       // setOpen(true);
+    }
+  };
+  const handleAvatarClick = () => {
+    // Trigger the hidden file input element
+    fileInputRef.current.click();
+  };
+  const fileInputRef = useRef(null);
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setPreviewImage(reader.result);
+    };
+
+    if (file) {
+      debugger;
+      console.log(file);
+
+      reader.readAsDataURL(file);
     }
   };
   return (
@@ -230,25 +241,19 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
             </Grid>
             <Grid item xs={8} sx={{ position: "relative" }}>
               <MDAvatar
-                src={burceMars}
+                src={previewImage}
+                onClick={handleAvatarClick}
                 alt="profile-image"
                 size="xl"
                 shadow="sm"
-                sx={{ cursor: "pointer" }}
-              >
-                <input
-                  accept="image/*"
-                  id="avatar-upload"
-                  type="file"
-                  onChange={handleImageSelect}
-                  style={{ display: "none" }}
-                />
-                <label htmlFor="avatar-upload" style={{ position: "absolute", top: 0, right: 0 }}>
-                  <IconButton color="primary" aria-label="upload picture" component="span">
-                    <PhotoCamera />
-                  </IconButton>
-                </label>
-              </MDAvatar>
+              />
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+              />
             </Grid>
             <Grid item xs={6} sm={6}>
               <MDInput

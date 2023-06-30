@@ -143,6 +143,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
+  //  getAllPost(mainstate.loggedUser.username);
 
   console.log("Dashboard", mainstate.displayPostData);
   return (
