@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import * as yup from "yup";
 
@@ -34,7 +34,7 @@ function Cover() {
   const { mainstate, setMainstate } = useContext(MainContext);
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
-
+  const navigate = useNavigate();
   const [signUp, setSignUp] = useState({
     firstName: "",
     lastName: "",
@@ -71,6 +71,7 @@ function Cover() {
   };
 
   const handleSignup = async () => {
+    const validationErrors = {};
     try {
       await formSchema.validate(signUp, { abortEarly: false });
       const response = await axios.post(`/api/auth/signup`, {
@@ -96,13 +97,15 @@ function Cover() {
         });
         setOpen(true);
         setMainstate({ ...mainstate, displayPostData: [] });
-        // navigate("/login", { replace: true });
+        navigate("/authentication/sign-in", { replace: true });
       }
     } catch (error) {
-      const validationErrors = {};
-      error.inner.forEach((err) => {
-        validationErrors[err.path] = err.message;
-      });
+      if (error.inner) {
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+      }
+
       setErrors(validationErrors);
     }
   };
