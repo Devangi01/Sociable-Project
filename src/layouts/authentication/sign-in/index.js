@@ -86,6 +86,7 @@ function Basic() {
           displayPostData: [],
           userFollowlist: [],
           loggedUser: response.data.foundUser,
+          token: true,
         });
         // setMainState({ ...mainState, isLoggedIn: true }); // Update isLoggedIn state in MainContext
         navigate("/dashboard", { replace: true });

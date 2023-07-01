@@ -247,6 +247,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
                 size="xl"
                 shadow="sm"
               />
+
               <input
                 type="file"
                 accept="image/*"

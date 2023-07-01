@@ -47,6 +47,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import { PrivateRoute } from "components/PrivateRoute";
 
 const routes = [
   {
@@ -79,7 +80,11 @@ const routes = [
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
-    component: <Profile />,
+    component: (
+      <PrivateRoute>
+        <Profile />
+      </PrivateRoute>
+    ),
   },
   {
     type: "collapse",
@@ -87,7 +92,11 @@ const routes = [
     key: "notifications",
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
-    component: <Notifications />,
+    component: (
+      <PrivateRoute>
+        <Notifications />,
+      </PrivateRoute>
+    ),
   },
   {
     type: "collapse",
