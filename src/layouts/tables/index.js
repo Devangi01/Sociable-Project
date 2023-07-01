@@ -109,7 +109,7 @@ function Tables() {
               >
                 {mainstate.displayAllUserPostData &&
                   mainstate.displayAllUserPostData.map((data) => (
-                    <PostCard cardData={data} key={data._id} />
+                    <PostCard getAllUserPost={getAllUserPost} cardData={data} key={data._id} />
                   ))}
               </Box>
             </Grid>

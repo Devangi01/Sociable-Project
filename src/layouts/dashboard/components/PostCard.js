@@ -44,31 +44,6 @@ const PostCard = (props) => {
 
   const encodedToken = localStorage.getItem("token");
 
-  const checkISLiked =
-    likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
-  console.log("Check Result", checkISLiked);
-
-  const getAllPost = async (username) => {
-    try {
-      debugger;
-      const response = await axios.get(`/api/posts/user/${username}`);
-
-      if (response.status === 200) {
-        setMainstate({ ...mainstate, displayPostData: response.data.posts });
-      }
-    } catch (error) {
-      // setErrorSB(true);
-
-      setNotification({
-        color: "error",
-        icon: "warning",
-        title: error.response.status + " " + error.response.statusText + " ",
-        content: error.response.data.errors,
-      });
-      setOpen(true);
-    }
-  };
-
   const getAllBookMarks = async () => {
     try {
       const response = await axios.get(`api/users/bookmark`, {
@@ -136,26 +111,6 @@ const PostCard = (props) => {
     }
   };
 
-  const getAllUserPost = async () => {
-    try {
-      const response = await axios.get(`/api/posts`);
-
-      if (response.status === 200) {
-        setMainstate({ ...mainstate, displayAllUserPostData: response.data.posts });
-      }
-    } catch (error) {
-      // setErrorSB(true);
-
-      setNotification({
-        color: "error",
-        icon: "warning",
-        title: error.response.status + " " + error.response.statusText + " ",
-        content: error.response.data.errors,
-      });
-      setOpen(true);
-    }
-  };
-
   const addToBookmark = async (id) => {
     try {
       const response = await axios.post(
@@ -191,6 +146,7 @@ const PostCard = (props) => {
   };
 
   const handlePostLikeClick = async (id, checkStatus) => {
+    debugger;
     try {
       const response = await axios.post(
         checkStatus === "like" ? `/api/posts/like/${id}` : `/api/posts/dislike/${id}`,
@@ -202,28 +158,9 @@ const PostCard = (props) => {
         }
       );
       if (response.status === 201) {
-        getAllPost(mainstate.loggedUser.username);
-        getAllUserPost();
+        props.getAllUserPost();
+        // getAllUserPost();
         console.log("After Like", response);
-        // setMainstate({
-        //   ...mainstate,
-        //   displayPostData: response.data.posts,
-        // });
-        // setNotification({
-        //   color: "success",
-        //   icon: "check",
-        //   title: response.status + " " + response.statusText,
-        //   content:
-        //     checkStatus === "follow"
-        //       ? "Now you are following to " +
-        //         response.data.followUser.firstName +
-        //         response.data.followUser.lastName
-        //       : "You are unfollowing to " +
-        //         response.data.followUser.firstName +
-        //         " " +
-        //         response.data.followUser.lastName,
-        // });
-        // setOpen(true);
       }
     } catch (error) {
       // setErrorSB(true);
@@ -237,6 +174,10 @@ const PostCard = (props) => {
       setOpen(true);
     }
   };
+
+  const checkISLiked =
+    likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
+  console.log("Check Result", checkISLiked);
   return (
     <MDBox key={_id} style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
       <Grid container spacing={1}>
@@ -332,5 +273,7 @@ PostCard.propTypes = {
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
   }).isRequired,
+
+  getAllUserPost: PropTypes.func,
 };
 export default PostCard;

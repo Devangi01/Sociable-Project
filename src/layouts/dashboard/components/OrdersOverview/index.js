@@ -156,7 +156,12 @@ const OrdersOverview = () => {
         </MDTypography>
       </MDBox>
       {mainstate.allUserlist &&
-        mainstate.allUserlist.map((data) => <FollowPost followData={data} key={data._id} />)}
+        mainstate.allUserlist.map(
+          (data) =>
+            data.username !== mainstate.loggedUser.username && (
+              <FollowPost followData={data} key={data._id} />
+            )
+        )}
       <MDSnackbar
         color={notification.color}
         icon={notification.icon}

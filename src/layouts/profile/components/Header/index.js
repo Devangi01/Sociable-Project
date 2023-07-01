@@ -120,7 +120,11 @@ function Header({ children, data }) {
                 style={{ display: "flex", flexDiretion: "row" }}
               >
                 <MDTypography variant="button" mr={3} color="text" fontWeight="regular">
-                  {mainstate.displayPostData && `${mainstate.displayPostData.length} Post`}
+                  {mainstate.displayAllUserPostData &&
+                    mainstate.displayAllUserPostData.filter(
+                      (data) => data.username === mainstate.loggedUser.username
+                    ).length}{" "}
+                  Post
                 </MDTypography>
                 <MDTypography variant="button" mr={3} color="text" fontWeight="regular">
                   {data.followers && `${data.followers.length} Followers`}

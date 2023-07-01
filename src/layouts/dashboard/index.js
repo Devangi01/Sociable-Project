@@ -21,6 +21,8 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import MDAvatar from "components/MDAvatar";
@@ -66,46 +68,50 @@ function Dashboard() {
     content: "",
   });
 
+  const [filterButton, setFilterButton] = useState({
+    trending: false,
+    latest: false,
+  });
   const [postcontent, setPostContent] = useState("");
   const encodedToken = localStorage.getItem("token");
 
-  const getAllBookMarks = async () => {
-    try {
-      const response = await axios.get(`api/users/bookmark`, {
-        headers: {
-          authorization: encodedToken, // passing token as an authorization header
-        },
-      });
-    } catch (error) {
-      // setErrorSB(true);
-      // setNotification({
-      //   color: "error",
-      //   icon: "warning",
-      //   title: error.response.status + " " + error.response.statusText + " ",
-      //   content: error.response.data.errors,
-      // });
-      // setOpen(true);
-    }
-  };
-  const getAllPost = async (username) => {
-    try {
-      const response = await axios.get(`/api/posts/user/${username}`);
+  // const getAllBookMarks = async () => {
+  //   try {
+  //     const response = await axios.get(`api/users/bookmark`, {
+  //       headers: {
+  //         authorization: encodedToken, // passing token as an authorization header
+  //       },
+  //     });
+  //   } catch (error) {
+  //     // setErrorSB(true);
+  //     // setNotification({
+  //     //   color: "error",
+  //     //   icon: "warning",
+  //     //   title: error.response.status + " " + error.response.statusText + " ",
+  //     //   content: error.response.data.errors,
+  //     // });
+  //     // setOpen(true);
+  //   }
+  // };
+  // const getAllPost = async (username) => {
+  //   try {
+  //     const response = await axios.get(`/api/posts/user/${username}`);
 
-      if (response.status === 200) {
-        setMainstate({ ...mainstate, displayPostData: response.data.posts });
-      }
-    } catch (error) {
-      // setErrorSB(true);
+  //     if (response.status === 200) {
+  //       setMainstate({ ...mainstate, displayPostData: response.data.posts });
+  //     }
+  //   } catch (error) {
+  //     // setErrorSB(true);
 
-      setNotification({
-        color: "error",
-        icon: "warning",
-        title: error.response.status + " " + error.response.statusText + " ",
-        content: error.response.data.errors,
-      });
-      setOpen(true);
-    }
-  };
+  //     setNotification({
+  //       color: "error",
+  //       icon: "warning",
+  //       title: error.response.status + " " + error.response.statusText + " ",
+  //       content: error.response.data.errors,
+  //     });
+  //     setOpen(true);
+  //   }
+  // };
 
   const addNewPost = async () => {
     try {
@@ -122,7 +128,8 @@ function Dashboard() {
       );
 
       if (response.status === 201) {
-        getAllPost(response.data.posts[response.data.posts.length - 1].username);
+        //getAllPost(response.data.posts[response.data.posts.length - 1].username);
+        getAllUserPost();
         setNotification({
           color: "success",
           icon: "check",
@@ -130,6 +137,10 @@ function Dashboard() {
           content: "Post Created Successful!",
         });
         setOpen(true);
+        setFilterButton({
+          trending: false,
+          latest: false,
+        });
       }
     } catch (error) {
       // setErrorSB(true);
@@ -143,7 +154,46 @@ function Dashboard() {
       setOpen(true);
     }
   };
-  //  getAllPost(mainstate.loggedUser.username);
+  // useEffect(() => {
+  //   getAllPost(mainstate.loggedUser.username);
+  // }, [mainstate.displayPostData]);
+
+  const getAllUserPost = async () => {
+    try {
+      const response = await axios.get(`/api/posts`);
+
+      if (response.status === 200) {
+        setMainstate({ ...mainstate, displayAllUserPostData: response.data.posts });
+      }
+    } catch (error) {
+      // setErrorSB(true);
+
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
+
+  const handleFilter = (filterType) => {
+    filterType === "trending"
+      ? setFilterButton({ trending: true, latest: false })
+      : setFilterButton({ trending: false, latest: true });
+    console.log("Filter type", filterType);
+    console.log("Filter type", filterButton);
+
+    if (filterType === "trending") {
+      mainstate.displayAllUserPostData.sort((a, b) => b.likes.likeCount - a.likes.likeCount);
+    } else {
+      mainstate.displayAllUserPostData.sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+      );
+    }
+    console.log("Filter type", mainstate.displayAllUserPostData);
+  };
 
   console.log("Dashboard", mainstate.displayPostData);
   return (
@@ -207,8 +257,30 @@ function Dashboard() {
                 lg={12}
               >
                 <Grid item>
-                  {" "}
                   <MDTypography>Recent Post</MDTypography>{" "}
+                </Grid>
+                <Grid item style={{ display: "flex", flexDirection: "row" }}>
+                  <MDButton
+                    pt={5}
+                    variant={filterButton.trending ? "contained" : "outlined"}
+                    startIcon={<TrendingUpIcon />}
+                    color="error"
+                    onClick={() => handleFilter("trending")}
+                  >
+                    Trending{" "}
+                  </MDButton>
+
+                  <MDButton
+                    size="small"
+                    style={{ marginLeft: "3%" }}
+                    pt={5}
+                    variant={filterButton.latest ? "contained" : "outlined"}
+                    startIcon={<RefreshIcon />}
+                    color="error"
+                    onClick={() => handleFilter("latest")}
+                  >
+                    Latest{" "}
+                  </MDButton>
                 </Grid>
               </Grid>
             </Grid>
@@ -222,10 +294,13 @@ function Dashboard() {
                   borderRadius: "10px",
                 }}
               >
-                {mainstate.displayPostData &&
-                  mainstate.displayPostData.map((data) => (
-                    <PostCard cardData={data} key={data._id} />
-                  ))}
+                {mainstate.displayAllUserPostData &&
+                  mainstate.displayAllUserPostData.map(
+                    (data) =>
+                      data.username === mainstate.loggedUser.username && (
+                        <PostCard getAllUserPost={getAllUserPost} cardData={data} key={data._id} />
+                      )
+                  )}
               </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
