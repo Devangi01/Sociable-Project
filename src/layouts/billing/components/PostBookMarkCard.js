@@ -11,6 +11,7 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import MDAvatar from "components/MDAvatar";
 import MDTypography from "components/MDTypography";
+import { MainContext } from "context";
 
 import team1 from "assets/images/team-1.jpg";
 
@@ -19,11 +20,13 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import Typography from "@mui/material/Typography";
 
 const PostBookMarkCard = (props) => {
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const { mainstate, setMainstate } = useContext(MainContext);
 
   const [notification, setNotification] = useState({
     color: "",
@@ -32,7 +35,7 @@ const PostBookMarkCard = (props) => {
     content: "",
   });
 
-  const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } =
+  const { _id, content, likes, username, firstName, lastName, image, createdAt, updatedAt } =
     props.cardData;
 
   const encodedToken = localStorage.getItem("token");
@@ -143,7 +146,7 @@ const PostBookMarkCard = (props) => {
       <Grid container spacing={1}>
         <Grid item xs={1}>
           <MDBox mr={2}>
-            <MDAvatar src={team1} alt="something here" shadow="md" />
+            <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
           </MDBox>
         </Grid>
 
@@ -156,17 +159,14 @@ const PostBookMarkCard = (props) => {
               </MDTypography>
             </Grid>
             <Grid item>
-              <MDInput
-                type="description"
-                label="Description"
-                name="description"
-                multiline
-                rows={3}
-                fullWidth
-                value={content}
-                disabled
-                //  onChange={(event) => setPostContent(event.target.value)}
-              />
+              <Typography variant="overline" display="block" gutterBottom>
+                {content}
+              </Typography>
+            </Grid>
+            <Grid item style={{ display: "flex", justifyContent: "center" }}>
+              {image && (
+                <img src={image} alt="Selected" style={{ width: "400px", height: "auto" }} />
+              )}
             </Grid>
             <Grid item style={{ width: "100%" }}>
               <Grid container spacing={1}>
@@ -222,6 +222,7 @@ PostBookMarkCard.propTypes = {
     lastName: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
 };
 export default PostBookMarkCard;

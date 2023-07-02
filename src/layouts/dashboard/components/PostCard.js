@@ -21,6 +21,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { MainContext } from "context";
+import Typography from "@mui/material/Typography";
 
 const PostCard = (props) => {
   const { mainstate, setMainstate } = useContext(MainContext);
@@ -36,7 +37,7 @@ const PostCard = (props) => {
     content: "",
   });
 
-  const { _id, content, likes, firstName, lastName, createdAt, updatedAt, username } =
+  const { _id, content, likes, firstName, lastName, createdAt, updatedAt, username, image } =
     props.cardData;
   console.log("Likes In PostCard", likes);
   console.log("Username In PostCard", username);
@@ -178,12 +179,15 @@ const PostCard = (props) => {
   const checkISLiked =
     likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
   console.log("Check Result", checkISLiked);
+  var binaryData = [];
+  binaryData.push(image);
+
   return (
     <MDBox key={_id} style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
       <Grid container spacing={1}>
         <Grid item xs={1}>
           <MDBox mr={2}>
-            <MDAvatar src={team1} alt="something here" shadow="md" />
+            <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
           </MDBox>
         </Grid>
 
@@ -196,17 +200,16 @@ const PostCard = (props) => {
               </MDTypography>
             </Grid>
             <Grid item>
-              <MDInput
-                type="text"
-                name="description"
-                multiline
-                rows={3}
-                fullWidth
-                value={content}
-                disabled
-                //  onChange={(event) => setPostContent(event.target.value)}
-              />
+              <Typography variant="overline" display="block" gutterBottom>
+                {content}
+              </Typography>
             </Grid>
+            <Grid item style={{ display: "flex", justifyContent: "center" }}>
+              {image && (
+                <img src={image} alt="Selected" style={{ width: "400px", height: "auto" }} />
+              )}
+            </Grid>
+
             <Grid item style={{ width: "100%" }}>
               <Grid container spacing={1}>
                 <Grid style={{ textAlign: "left", display: "flex", flexWrap: "wrap" }} item md={3}>
@@ -272,6 +275,7 @@ PostCard.propTypes = {
     lastName: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
 
   getAllUserPost: PropTypes.func,

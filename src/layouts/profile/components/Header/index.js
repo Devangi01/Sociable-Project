@@ -50,6 +50,8 @@ function Header({ children, data }) {
 
   // const userData = props.data;
 
+  console.log("Inside The Header", mainstate.loggedUser);
+
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
     function handleTabsOrientation() {
@@ -103,7 +105,7 @@ function Header({ children, data }) {
       >
         <Grid container spacing={3} alignItems="center">
           <Grid item>
-            <MDAvatar src={`${img}`} alt="profile-image" size="xl" shadow="sm" />
+            <MDAvatar src={mainstate.loggedUser.image} alt="profile-image" size="xl" shadow="sm" />
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>

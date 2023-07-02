@@ -15,6 +15,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { MainContext } from "context";
+import team2 from "assets/images/team-2.jpg";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -71,6 +72,7 @@ function Cover() {
   };
 
   const handleSignup = async () => {
+    debugger;
     const validationErrors = {};
     try {
       await formSchema.validate(signUp, { abortEarly: false });
@@ -79,6 +81,7 @@ function Cover() {
         lastName: signUp.lastName,
         username: signUp.username,
         password: signUp.password,
+        image: team2,
         bio: "Hi, I’m Alec default, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).",
         email: "tempemail@gmail.com",
         location: "UAE",

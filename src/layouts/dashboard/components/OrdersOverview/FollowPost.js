@@ -164,7 +164,7 @@ const FollowPost = (props) => {
           }}
         >
           <MDBox mr={2}>
-            <MDAvatar src={team1} alt="something here" shadow="md" />
+            <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
           </MDBox>
         </Grid>
         <Grid item md={4} className={classes.name}>

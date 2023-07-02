@@ -64,6 +64,8 @@ export const getAllUserPostsHandler = function (schema, request) {
  * */
 
 export const createPostHandler = function (schema, request) {
+  debugger;
+
   const user = requiresAuth.call(this, request);
 
   try {
@@ -76,10 +78,11 @@ export const createPostHandler = function (schema, request) {
         }
       );
     }
-    const { content } = JSON.parse(request.requestBody);
+    const { content, image } = JSON.parse(request.requestBody);
     const post = {
       _id: uuid(),
       content: content,
+      image: image,
       likes: {
         likeCount: 0,
         likedBy: [],

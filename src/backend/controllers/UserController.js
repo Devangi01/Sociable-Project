@@ -42,6 +42,7 @@ export const getUserHandler = function (schema, request) {
  * */
 
 export const editUserHandler = function (schema, request) {
+  debugger;
   let user = requiresAuth.call(this, request);
   try {
     if (!user) {
@@ -135,6 +136,7 @@ export const bookmarkPostHandler = function (schema, request) {
       _id: post._id,
       username: post.username,
       content: post.content,
+      image: post.image,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       firstName: user.firstName,

@@ -131,17 +131,26 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   };
 
   const handleClick = async () => {
+    debugger;
+    const data = new FormData();
+    data.append("firstName", editUser.firstName);
+    data.append("lastName", editUser.lastName);
+    data.append("bio", editUser.bio);
+    data.append("email", editUser.email);
+    selectedImage && data.append("image", URL.createObjectURL(selectedImage));
+    var object = {};
+    data.forEach((value, key) => (object[key] = value));
+    var jsonData = JSON.stringify(object);
     try {
       const response = await axios.post(
         `/api/users/edit`,
-        {
-          firstName: editUser.firstName,
-          lastName: editUser.lastName,
-          bio: editUser.bio,
-          email: editUser.email,
-        },
+        jsonData,
+
         {
           headers: {
+            accept: "application/json",
+            "Accept-Language": "en-US,en;q=0.8",
+            "Content-Type": `multipart/form-data; boundary=${jsonData._boundary}`,
             authorization: encodedToken, // passing token as an authorization header
           },
         }
@@ -151,6 +160,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
       if (response.status === 201) {
         // alert("Update");
         setMainstate({ ...mainstate, loggedUser: response.data.user });
+        setOpen(false);
         // getAllPost(response.data.posts[response.data.posts.length - 1].username);
         // setNotification({
         //   color: "success",
@@ -241,7 +251,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
             </Grid>
             <Grid item xs={8} sx={{ position: "relative" }}>
               <MDAvatar
-                src={previewImage}
+                src={previewImage === null ? mainstate.loggedUser.image : previewImage}
                 onClick={handleAvatarClick}
                 alt="profile-image"
                 size="xl"

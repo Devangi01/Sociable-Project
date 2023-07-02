@@ -88,18 +88,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: (
-      <PrivateRoute>
-        <Notifications />,
-      </PrivateRoute>
-    ),
-  },
-  {
-    type: "collapse",
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,

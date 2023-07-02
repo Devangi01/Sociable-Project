@@ -23,10 +23,12 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CollectionsIcon from "@mui/icons-material/Collections";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import MDAvatar from "components/MDAvatar";
 import team1 from "assets/images/team-1.jpg";
+import FormData from "form-data";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -57,6 +59,7 @@ import PostCard from "./components/PostCard";
 function Dashboard() {
   const { mainstate, setMainstate } = useContext(MainContext);
   const { sales, tasks } = reportsLineChartData;
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
@@ -114,22 +117,28 @@ function Dashboard() {
   // };
 
   const addNewPost = async () => {
+    const data = new FormData();
+    data.append("content", postcontent);
+    selectedImage && data.append("image", URL.createObjectURL(selectedImage));
+    var object = {};
+    data.forEach((value, key) => (object[key] = value));
+    var jsonData = JSON.stringify(object);
+    debugger;
     try {
-      const response = await axios.post(
-        `/api/posts`,
-        {
-          content: postcontent,
+      const response = await axios.post(`/api/posts`, jsonData, {
+        headers: {
+          accept: "application/json",
+          "Accept-Language": "en-US,en;q=0.8",
+          "Content-Type": `multipart/form-data; boundary=${jsonData._boundary}`,
+          authorization: encodedToken,
         },
-        {
-          headers: {
-            authorization: encodedToken, // passing token as an authorization header
-          },
-        }
-      );
+      });
 
       if (response.status === 201) {
+        debugger;
         //getAllPost(response.data.posts[response.data.posts.length - 1].username);
         getAllUserPost();
+        console.log("selectedImage", selectedImage);
         setNotification({
           color: "success",
           icon: "check",
@@ -164,6 +173,7 @@ function Dashboard() {
 
       if (response.status === 200) {
         setMainstate({ ...mainstate, displayAllUserPostData: response.data.posts });
+        console.log("Dashboard Response", response);
       }
     } catch (error) {
       // setErrorSB(true);
@@ -177,7 +187,7 @@ function Dashboard() {
       setOpen(true);
     }
   };
-
+  console.log("dashboard", mainstate.displayAllUserPostData);
   const handleFilter = (filterType) => {
     filterType === "trending"
       ? setFilterButton({ trending: true, latest: false })
@@ -196,6 +206,14 @@ function Dashboard() {
   };
 
   console.log("Dashboard", mainstate.displayPostData);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
+  const handleImageClick = () => {
+    document.getElementById("imageInput").click();
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -207,7 +225,7 @@ function Dashboard() {
                 <Grid container spacing={1}>
                   <Grid item xs={1}>
                     <MDBox mr={2}>
-                      <MDAvatar src={team1} alt="something here" shadow="md" />
+                      <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
                     </MDBox>
                   </Grid>
 
@@ -229,6 +247,15 @@ function Dashboard() {
                           onChange={(event) => setPostContent(event.target.value)}
                         />
                       </Grid>
+                      <Grid item style={{ display: "flex", justifyContent: "center" }}>
+                        {selectedImage && (
+                          <img
+                            src={URL.createObjectURL(selectedImage)}
+                            alt="Selected"
+                            style={{ width: "400px", height: "auto" }}
+                          />
+                        )}
+                      </Grid>
                       <Grid item style={{ display: "flex", flexDirection: "row-reverse" }}>
                         <MDButton
                           pt={5}
@@ -238,6 +265,16 @@ function Dashboard() {
                         >
                           Post
                         </MDButton>
+                        <Box mr={1} display="flex" alignItems="center">
+                          <input
+                            type="file"
+                            id="imageInput"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={handleImageChange}
+                          />
+                          <CollectionsIcon fontSize="medium" onClick={handleImageClick} />
+                        </Box>
                       </Grid>
                     </Grid>
                   </Grid>
