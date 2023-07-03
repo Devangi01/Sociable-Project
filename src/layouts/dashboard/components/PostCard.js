@@ -7,6 +7,8 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -176,6 +178,71 @@ const PostCard = (props) => {
     }
   };
 
+  const handleDeletePost = async (checkStatus) => {
+    alert(_id);
+    try {
+      const response = await axios.delete(`api/posts/${_id}`, {
+        headers: {
+          authorization: encodedToken, // passing token as an authorization header
+        },
+      });
+      debugger;
+      if (response.status === 201) {
+        props.getAllUserPost();
+        setNotification({
+          color: "success",
+          icon: "check",
+          title: response.status + " " + response.statusText,
+          content: "Delete Post Successful!",
+        });
+        setOpen(true);
+      }
+    } catch (error) {
+      // setErrorSB(true);
+
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
+
+  const handleEditPost = async (checkStatus) => {
+    alert(_id);
+    props.setDataForEditPost(_id, content, image);
+    // try {
+    //   const response = await axios.delete(`api/posts/${_id}`, {
+    //     headers: {
+    //       authorization: encodedToken, // passing token as an authorization header
+    //     },
+    //   });
+    //   debugger;
+    //   if (response.status === 201) {
+    //     props.getAllUserPost();
+    //     setNotification({
+    //       color: "success",
+    //       icon: "check",
+    //       title: response.status + " " + response.statusText,
+    //       content: "Delete Post Successful!",
+    //     });
+    //     setOpen(true);
+    //   }
+    // } catch (error) {
+    //   // setErrorSB(true);
+
+    //   setNotification({
+    //     color: "error",
+    //     icon: "warning",
+    //     title: error.response.status + " " + error.response.statusText + " ",
+    //     content: error.response.data.errors,
+    //   });
+    //   setOpen(true);
+    // }
+  };
+
   const checkISLiked =
     likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
   console.log("Check Result", checkISLiked);
@@ -193,10 +260,20 @@ const PostCard = (props) => {
 
         <Grid item xs={11}>
           <Grid container spacing={1} style={{ display: "flex", flexDirection: "column" }}>
-            <Grid item>
+            <Grid item style={{ display: "flex", justifyContent: "space-between" }}>
               <MDTypography>
                 {firstName} {lastName}&nbsp;
                 <small style={{ color: "#a09699" }}>@{username}</small>
+              </MDTypography>
+              <MDTypography>
+                <DriveFileRenameOutlineIcon
+                  style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
+                  onClick={() => handleEditPost("edit")}
+                />{" "}
+                <DeleteOutlineIcon
+                  onClick={() => handleDeletePost("delete")}
+                  style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
+                />{" "}
               </MDTypography>
             </Grid>
             <Grid item>
@@ -279,5 +356,6 @@ PostCard.propTypes = {
   }).isRequired,
 
   getAllUserPost: PropTypes.func,
+  setDataForEditPost: PropTypes.func,
 };
 export default PostCard;

@@ -125,6 +125,7 @@ const OrdersOverview = () => {
       if (response.status === 200) {
         //   getAllPost(response.data.posts[response.data.posts.length - 1].username);
         console.log("Follow list", response);
+
         setNotification({
           color: "success",
           icon: "check",

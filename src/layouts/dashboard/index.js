@@ -77,44 +77,7 @@ function Dashboard() {
   });
   const [postcontent, setPostContent] = useState("");
   const encodedToken = localStorage.getItem("token");
-
-  // const getAllBookMarks = async () => {
-  //   try {
-  //     const response = await axios.get(`api/users/bookmark`, {
-  //       headers: {
-  //         authorization: encodedToken, // passing token as an authorization header
-  //       },
-  //     });
-  //   } catch (error) {
-  //     // setErrorSB(true);
-  //     // setNotification({
-  //     //   color: "error",
-  //     //   icon: "warning",
-  //     //   title: error.response.status + " " + error.response.statusText + " ",
-  //     //   content: error.response.data.errors,
-  //     // });
-  //     // setOpen(true);
-  //   }
-  // };
-  // const getAllPost = async (username) => {
-  //   try {
-  //     const response = await axios.get(`/api/posts/user/${username}`);
-
-  //     if (response.status === 200) {
-  //       setMainstate({ ...mainstate, displayPostData: response.data.posts });
-  //     }
-  //   } catch (error) {
-  //     // setErrorSB(true);
-
-  //     setNotification({
-  //       color: "error",
-  //       icon: "warning",
-  //       title: error.response.status + " " + error.response.statusText + " ",
-  //       content: error.response.data.errors,
-  //     });
-  //     setOpen(true);
-  //   }
-  // };
+  const [editMode, seteditMode] = useState(false);
 
   const addNewPost = async () => {
     const data = new FormData();
@@ -139,6 +102,8 @@ function Dashboard() {
         //getAllPost(response.data.posts[response.data.posts.length - 1].username);
         getAllUserPost();
         console.log("selectedImage", selectedImage);
+        setPostContent("");
+        setSelectedImage(null);
         setNotification({
           color: "success",
           icon: "check",
@@ -162,6 +127,15 @@ function Dashboard() {
       });
       setOpen(true);
     }
+  };
+
+  const setDataForEditPost = (id, content, image) => {
+    debugger;
+    setPostContent(content);
+    var file = new File([image], "editimage");
+    setSelectedImage(file);
+
+    alert("call");
   };
   // useEffect(() => {
   //   getAllPost(mainstate.loggedUser.username);
@@ -335,7 +309,12 @@ function Dashboard() {
                   mainstate.displayAllUserPostData.map(
                     (data) =>
                       data.username === mainstate.loggedUser.username && (
-                        <PostCard getAllUserPost={getAllUserPost} cardData={data} key={data._id} />
+                        <PostCard
+                          getAllUserPost={getAllUserPost}
+                          setDataForEditPost={setDataForEditPost}
+                          cardData={data}
+                          key={data._id}
+                        />
                       )
                   )}
               </Box>

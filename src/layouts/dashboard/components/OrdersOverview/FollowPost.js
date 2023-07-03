@@ -77,7 +77,7 @@ const FollowPost = (props) => {
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
 
-  const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt } =
+  const { _id, content, likes, username, firstName, lastName, createdAt, updatedAt, image } =
     props.followData;
 
   const [notification, setNotification] = useState({
@@ -164,7 +164,7 @@ const FollowPost = (props) => {
           }}
         >
           <MDBox mr={2}>
-            <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
+            <MDAvatar src={image} alt="something here" shadow="md" />
           </MDBox>
         </Grid>
         <Grid item md={4} className={classes.name}>
@@ -224,6 +224,7 @@ FollowPost.propTypes = {
     lastName: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
 };
 
