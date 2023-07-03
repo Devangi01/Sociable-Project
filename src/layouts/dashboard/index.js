@@ -24,6 +24,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CollectionsIcon from "@mui/icons-material/Collections";
+import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import MDAvatar from "components/MDAvatar";
@@ -60,7 +61,7 @@ function Dashboard() {
   const { mainstate, setMainstate } = useContext(MainContext);
   const { sales, tasks } = reportsLineChartData;
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [displayCancleIcon, setDisplayCancleIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const closeSuccessSB = () => setOpen(false);
 
@@ -77,9 +78,15 @@ function Dashboard() {
   });
   const [postcontent, setPostContent] = useState("");
   const encodedToken = localStorage.getItem("token");
-  const [editMode, seteditMode] = useState(false);
+
+  const [editPostInfoState, setEditPostInfoState] = useState({
+    editMode: false,
+    editID: "",
+    editImageDisplay: false,
+  });
 
   const addNewPost = async () => {
+    debugger;
     const data = new FormData();
     data.append("content", postcontent);
     selectedImage && data.append("image", URL.createObjectURL(selectedImage));
@@ -104,6 +111,7 @@ function Dashboard() {
         console.log("selectedImage", selectedImage);
         setPostContent("");
         setSelectedImage(null);
+        setDisplayCancleIcon(false);
         setNotification({
           color: "success",
           icon: "check",
@@ -130,16 +138,16 @@ function Dashboard() {
   };
 
   const setDataForEditPost = (id, content, image) => {
-    debugger;
-    setPostContent(content);
-    var file = new File([image], "editimage");
-    setSelectedImage(file);
+    setEditPostInfoState({
+      editMode: true,
+      editID: id,
+      editImageDisplay: true,
+    });
 
-    alert("call");
+    setPostContent(content);
+    setSelectedImage(image);
+    setDisplayCancleIcon(true);
   };
-  // useEffect(() => {
-  //   getAllPost(mainstate.loggedUser.username);
-  // }, [mainstate.displayPostData]);
 
   const getAllUserPost = async () => {
     try {
@@ -182,12 +190,82 @@ function Dashboard() {
   console.log("Dashboard", mainstate.displayPostData);
 
   const handleImageChange = (event) => {
+    setEditPostInfoState({
+      ...editPostInfoState,
+      editImageDisplay: false,
+    });
     const file = event.target.files[0];
     setSelectedImage(file);
+    setDisplayCancleIcon(true);
   };
   const handleImageClick = () => {
     document.getElementById("imageInput").click();
   };
+
+  const editPost = async () => {
+    debugger;
+    const data = new FormData();
+    data.append("content", postcontent);
+    selectedImage &&
+      data.append(
+        "image",
+        editPostInfoState.editImageDisplay ? selectedImage : URL.createObjectURL(selectedImage)
+      );
+    var object = {};
+    data.forEach((value, key) => (object[key] = value));
+    var jsonData = JSON.stringify(object);
+    debugger;
+    try {
+      const response = await axios.post(`/api/posts/edit/${editPostInfoState.editID}`, jsonData, {
+        headers: {
+          accept: "application/json",
+          "Accept-Language": "en-US,en;q=0.8",
+          "Content-Type": `multipart/form-data; boundary=${jsonData._boundary}`,
+          authorization: encodedToken,
+        },
+      });
+
+      if (response.status === 201) {
+        debugger;
+        //getAllPost(response.data.posts[response.data.posts.length - 1].username);
+        getAllUserPost();
+        setEditPostInfoState({
+          editMode: false,
+          editID: "",
+        });
+        setDisplayCancleIcon(false);
+        setPostContent("");
+        setSelectedImage(null);
+        setNotification({
+          color: "success",
+          icon: "check",
+          title: response.status + " " + response.statusText,
+          content: "Post Edit Successful!",
+        });
+        setOpen(true);
+        setFilterButton({
+          trending: false,
+          latest: false,
+        });
+      }
+    } catch (error) {
+      // setErrorSB(true);
+
+      setNotification({
+        color: "error",
+        icon: "warning",
+        title: error.response.status + " " + error.response.statusText + " ",
+        content: error.response.data.errors,
+      });
+      setOpen(true);
+    }
+  };
+
+  const hancleCancleIconClick = () => {
+    setSelectedImage(null);
+    setDisplayCancleIcon(false);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -224,21 +302,43 @@ function Dashboard() {
                       <Grid item style={{ display: "flex", justifyContent: "center" }}>
                         {selectedImage && (
                           <img
-                            src={URL.createObjectURL(selectedImage)}
+                            src={
+                              editPostInfoState.editImageDisplay
+                                ? selectedImage
+                                : URL.createObjectURL(selectedImage)
+                            }
                             alt="Selected"
                             style={{ width: "400px", height: "auto" }}
                           />
                         )}
+                        {displayCancleIcon && (
+                          <CancelIcon
+                            onClick={() => hancleCancleIconClick()}
+                            style={{ color: "red", marginLeft: "10px" }}
+                          />
+                        )}
                       </Grid>
                       <Grid item style={{ display: "flex", flexDirection: "row-reverse" }}>
-                        <MDButton
-                          pt={5}
-                          variant="contained"
-                          color="info"
-                          onClick={() => addNewPost()}
-                        >
-                          Post
-                        </MDButton>
+                        {editPostInfoState.editMode ? (
+                          <MDButton
+                            pt={5}
+                            variant="contained"
+                            color="info"
+                            onClick={() => editPost()}
+                          >
+                            Edit Post
+                          </MDButton>
+                        ) : (
+                          <MDButton
+                            pt={5}
+                            variant="contained"
+                            color="info"
+                            onClick={() => addNewPost()}
+                          >
+                            Post
+                          </MDButton>
+                        )}
+
                         <Box mr={1} display="flex" alignItems="center">
                           <input
                             type="file"
@@ -313,6 +413,7 @@ function Dashboard() {
                           getAllUserPost={getAllUserPost}
                           setDataForEditPost={setDataForEditPost}
                           cardData={data}
+                          pageName="home"
                           key={data._id}
                         />
                       )

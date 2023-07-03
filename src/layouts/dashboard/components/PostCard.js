@@ -179,7 +179,6 @@ const PostCard = (props) => {
   };
 
   const handleDeletePost = async (checkStatus) => {
-    alert(_id);
     try {
       const response = await axios.delete(`api/posts/${_id}`, {
         headers: {
@@ -211,36 +210,7 @@ const PostCard = (props) => {
   };
 
   const handleEditPost = async (checkStatus) => {
-    alert(_id);
     props.setDataForEditPost(_id, content, image);
-    // try {
-    //   const response = await axios.delete(`api/posts/${_id}`, {
-    //     headers: {
-    //       authorization: encodedToken, // passing token as an authorization header
-    //     },
-    //   });
-    //   debugger;
-    //   if (response.status === 201) {
-    //     props.getAllUserPost();
-    //     setNotification({
-    //       color: "success",
-    //       icon: "check",
-    //       title: response.status + " " + response.statusText,
-    //       content: "Delete Post Successful!",
-    //     });
-    //     setOpen(true);
-    //   }
-    // } catch (error) {
-    //   // setErrorSB(true);
-
-    //   setNotification({
-    //     color: "error",
-    //     icon: "warning",
-    //     title: error.response.status + " " + error.response.statusText + " ",
-    //     content: error.response.data.errors,
-    //   });
-    //   setOpen(true);
-    // }
   };
 
   const checkISLiked =
@@ -265,16 +235,18 @@ const PostCard = (props) => {
                 {firstName} {lastName}&nbsp;
                 <small style={{ color: "#a09699" }}>@{username}</small>
               </MDTypography>
-              <MDTypography>
-                <DriveFileRenameOutlineIcon
-                  style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
-                  onClick={() => handleEditPost("edit")}
-                />{" "}
-                <DeleteOutlineIcon
-                  onClick={() => handleDeletePost("delete")}
-                  style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
-                />{" "}
-              </MDTypography>
+              {props.pageName === "home" && (
+                <MDTypography>
+                  <DriveFileRenameOutlineIcon
+                    style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
+                    onClick={() => handleEditPost("edit")}
+                  />{" "}
+                  <DeleteOutlineIcon
+                    onClick={() => handleDeletePost("delete")}
+                    style={{ cursor: "pointer", border: "1px solid #000", fontSize: "large" }}
+                  />{" "}
+                </MDTypography>
+              )}
             </Grid>
             <Grid item>
               <Typography variant="overline" display="block" gutterBottom>
@@ -357,5 +329,6 @@ PostCard.propTypes = {
 
   getAllUserPost: PropTypes.func,
   setDataForEditPost: PropTypes.func,
+  pageName: PropTypes.string,
 };
 export default PostCard;
