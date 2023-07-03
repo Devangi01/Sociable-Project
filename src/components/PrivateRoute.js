@@ -9,7 +9,7 @@ export const PrivateRoute = ({ children }) => {
   return mainstate.token ? (
     children
   ) : (
-    <Navigate to="/authentication/sign-in" state={{ from: location }} />
+    <Navigate to="/authentication/sign-in" state={{ from: location }} replace />
   );
 };
 
