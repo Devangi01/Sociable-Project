@@ -1,20 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material componentsimport React, { useContext, useState, useEffect } from "react";
-
 import React, { useContext, useState, useEffect } from "react";
 
 import Grid from "@mui/material/Grid";
@@ -93,14 +76,12 @@ const Billing = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mt={4.5}>
-        <MDTypography>Filter Section</MDTypography>
-      </MDBox>
+      <MDBox mt={4.5}></MDBox>
       <MDBox py={3}>
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              {displayPostData && displayPostData.length > 0 && "Bookmark Post"}
+              {displayPostData.length > 0 ? "Bookmark Post" : <div>No bookmark saved</div>}
               <Box
                 sx={{
                   width: "100%",

@@ -72,8 +72,8 @@ function Basic() {
   const handleClick = async (loginUser) => {
     try {
       const response = await axios.post(`/api/auth/login`, {
-        username: loginUser === "guestLogin" ? "guest" : login.username,
-        password: loginUser === "guestLogin" ? "guest@123" : login.password,
+        username: loginUser === "guestLogin" ? "devangibhutiya" : login.username,
+        password: loginUser === "guestLogin" ? "devangi@123" : login.password,
         headers: {
           authorization: encodedToken, // passing token as an authorization header
         },
