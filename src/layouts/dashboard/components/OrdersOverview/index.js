@@ -22,7 +22,7 @@ import { MainContext } from "context";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: "100%",
+    // height: "100%",
     padding: theme.spacing(1),
     backgroundColor: "#f5f8fa",
   },

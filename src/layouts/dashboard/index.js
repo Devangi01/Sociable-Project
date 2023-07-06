@@ -109,7 +109,7 @@ function Dashboard() {
         });
       }
     } catch (error) {
-      // setErrorSB(true);
+      setErrorSB(true);
 
       setNotification({
         color: "error",
@@ -130,7 +130,7 @@ function Dashboard() {
 
     setPostContent(content);
     setSelectedImage(image);
-    setDisplayCancleIcon(true);
+    image && setDisplayCancleIcon(true);
   };
 
   const getAllUserPost = async () => {
@@ -254,161 +254,175 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={8}>
-              <MDBox style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
-                <Grid container spacing={1}>
-                  <Grid item xs={1}>
-                    <MDBox mr={2}>
-                      <MDAvatar src={mainstate.loggedUser.image} alt="something here" shadow="md" />
-                    </MDBox>
-                  </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs={12} md={6} lg={8}>
+            <MDBox mt={4.5}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <MDBox style={{ backgroundColor: "white", borderRadius: "10px" }} mb={3} p={2}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={1}>
+                        <MDBox mr={2}>
+                          <MDAvatar
+                            src={mainstate.loggedUser.image}
+                            alt="something here"
+                            shadow="md"
+                          />
+                        </MDBox>
+                      </Grid>
 
-                  <Grid item xs={11}>
-                    <Grid
-                      container
-                      spacing={1}
-                      style={{ display: "flex", flexDirection: "column" }}
-                    >
-                      <Grid item>
-                        <MDInput
-                          type="description"
-                          label="Description"
-                          name="description"
-                          multiline
-                          rows={3}
-                          fullWidth
-                          value={postcontent}
-                          onChange={(event) => setPostContent(event.target.value)}
-                        />
-                      </Grid>
-                      <Grid item style={{ display: "flex", justifyContent: "center" }}>
-                        {selectedImage && (
-                          <img
-                            src={
-                              editPostInfoState.editImageDisplay
-                                ? selectedImage
-                                : URL.createObjectURL(selectedImage)
-                            }
-                            alt="Selected"
-                            style={{ width: "400px", height: "auto" }}
-                          />
-                        )}
-                        {displayCancleIcon && (
-                          <CancelIcon
-                            onClick={() => hancleCancleIconClick()}
-                            style={{ color: "red", marginLeft: "10px" }}
-                          />
-                        )}
-                      </Grid>
-                      <Grid item style={{ display: "flex", flexDirection: "row-reverse" }}>
-                        {editPostInfoState.editMode ? (
-                          <MDButton
-                            pt={5}
-                            variant="contained"
-                            color="info"
-                            onClick={() => editPost()}
-                          >
-                            Edit Post
-                          </MDButton>
-                        ) : (
-                          <MDButton
-                            pt={5}
-                            variant="contained"
-                            color="info"
-                            onClick={() => addNewPost()}
-                          >
-                            Post
-                          </MDButton>
-                        )}
+                      <Grid item xs={11}>
+                        <Grid
+                          container
+                          spacing={1}
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <Grid item>
+                            <MDInput
+                              type="description"
+                              label="Description"
+                              name="description"
+                              multiline
+                              rows={3}
+                              fullWidth
+                              value={postcontent}
+                              onChange={(event) => setPostContent(event.target.value)}
+                            />
+                          </Grid>
+                          <Grid item style={{ display: "flex", justifyContent: "center" }}>
+                            {selectedImage && (
+                              <img
+                                src={
+                                  editPostInfoState.editImageDisplay
+                                    ? selectedImage
+                                    : URL.createObjectURL(selectedImage)
+                                }
+                                alt="Selected"
+                                style={{ width: "400px", height: "auto" }}
+                              />
+                            )}
+                            {displayCancleIcon && (
+                              <CancelIcon
+                                onClick={() => hancleCancleIconClick()}
+                                style={{ color: "red", marginLeft: "10px" }}
+                              />
+                            )}
+                          </Grid>
+                          <Grid item style={{ display: "flex", flexDirection: "row-reverse" }}>
+                            {editPostInfoState.editMode ? (
+                              <MDButton
+                                pt={5}
+                                variant="contained"
+                                color="info"
+                                onClick={() => editPost()}
+                              >
+                                Edit Post
+                              </MDButton>
+                            ) : (
+                              <MDButton
+                                pt={5}
+                                variant="contained"
+                                color="info"
+                                onClick={() => addNewPost()}
+                              >
+                                Post
+                              </MDButton>
+                            )}
 
-                        <Box mr={1} display="flex" alignItems="center">
-                          <input
-                            type="file"
-                            id="imageInput"
-                            accept="image/*"
-                            style={{ display: "none" }}
-                            onChange={handleImageChange}
-                          />
-                          <CollectionsIcon fontSize="medium" onClick={handleImageClick} />
-                        </Box>
+                            <Box mr={1} display="flex" alignItems="center">
+                              <input
+                                type="file"
+                                id="imageInput"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handleImageChange}
+                              />
+                              <CollectionsIcon fontSize="medium" onClick={handleImageClick} />
+                            </Box>
+                          </Grid>
+                        </Grid>
                       </Grid>
+                    </Grid>
+                  </MDBox>
+                </Grid>
+              </Grid>
+            </MDBox>
+            <MDBox>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6} lg={12}>
+                  <Grid
+                    container
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                    xs={12}
+                    md={12}
+                    lg={12}
+                  >
+                    <Grid item>
+                      <MDTypography>Recent Post</MDTypography>{" "}
+                    </Grid>
+                    <Grid item style={{ display: "flex", flexDirection: "row" }}>
+                      <MDButton
+                        pt={5}
+                        variant={filterButton.trending ? "contained" : "outlined"}
+                        startIcon={<TrendingUpIcon />}
+                        color="error"
+                        onClick={() => handleFilter("trending")}
+                      >
+                        Trending{" "}
+                      </MDButton>
+
+                      <MDButton
+                        size="small"
+                        style={{ marginLeft: "3%" }}
+                        pt={5}
+                        variant={filterButton.latest ? "contained" : "outlined"}
+                        startIcon={<RefreshIcon />}
+                        color="error"
+                        onClick={() => handleFilter("latest")}
+                      >
+                        Latest{" "}
+                      </MDButton>
                     </Grid>
                   </Grid>
                 </Grid>
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Grid
-                container
-                style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
-                xs={12}
-                md={12}
-                lg={12}
-              >
-                <Grid item>
-                  <MDTypography>Recent Post</MDTypography>{" "}
-                </Grid>
-                <Grid item style={{ display: "flex", flexDirection: "row" }}>
-                  <MDButton
-                    pt={5}
-                    variant={filterButton.trending ? "contained" : "outlined"}
-                    startIcon={<TrendingUpIcon />}
-                    color="error"
-                    onClick={() => handleFilter("trending")}
+                <Grid item xs={12} md={6} lg={12}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      // height: "420px",
+                      // overflow: "auto",
+                      backgroundColor: "#f0f2f5",
+                      borderRadius: "10px",
+                    }}
                   >
-                    Trending{" "}
-                  </MDButton>
-
-                  <MDButton
-                    size="small"
-                    style={{ marginLeft: "3%" }}
-                    pt={5}
-                    variant={filterButton.latest ? "contained" : "outlined"}
-                    startIcon={<RefreshIcon />}
-                    color="error"
-                    onClick={() => handleFilter("latest")}
-                  >
-                    Latest{" "}
-                  </MDButton>
+                    {mainstate.displayAllUserPostData &&
+                      mainstate.displayAllUserPostData.map(
+                        (data) =>
+                          data.username === mainstate.loggedUser.username && (
+                            <PostCard
+                              getAllUserPost={getAllUserPost}
+                              setDataForEditPost={setDataForEditPost}
+                              cardData={data}
+                              pageName="home"
+                              key={data._id}
+                            />
+                          )
+                      )}
+                  </Box>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12} md={6} lg={8}>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "420px",
-                  overflow: "auto",
-                  backgroundColor: "#f0f2f5",
-                  borderRadius: "10px",
-                }}
-              >
-                {mainstate.displayAllUserPostData &&
-                  mainstate.displayAllUserPostData.map(
-                    (data) =>
-                      data.username === mainstate.loggedUser.username && (
-                        <PostCard
-                          getAllUserPost={getAllUserPost}
-                          setDataForEditPost={setDataForEditPost}
-                          cardData={data}
-                          pageName="home"
-                          key={data._id}
-                        />
-                      )
-                  )}
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
+            </MDBox>
           </Grid>
-        </MDBox>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mt={4.5}>
+              <OrdersOverview />
+            </MDBox>
+          </Grid>
+        </Grid>
       </MDBox>
       <MDSnackbar
         color={notification.color}

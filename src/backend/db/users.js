@@ -24,11 +24,11 @@ export const users = [
 
   {
     _id: uuid(),
-    firstName: "Mahek",
+    firstName: "Chintan",
     image: team2,
     lastName: "Bhutiya",
-    username: "mahekbhutiya",
-    password: "mahek@123",
+    username: "chintanhutiya",
+    password: "chintan@123",
     createdAt: formatDate(),
     updatedAt: formatDate(),
   },
