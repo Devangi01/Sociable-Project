@@ -41,7 +41,7 @@ import { MainContext } from "context";
 function Overview() {
   const { mainstate, setMainstate } = useContext(MainContext);
   console.log(mainstate.loggedUser);
-  const { firstName, lastName, email, location } = mainstate.loggedUser;
+  const { firstName, lastName, url, location } = mainstate.loggedUser;
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -56,7 +56,7 @@ function Overview() {
                 description={mainstate.loggedUser.bio}
                 info={{
                   fullName: firstName + lastName,
-                  email: email,
+                  url: url,
                   location: location,
                 }}
                 social={[

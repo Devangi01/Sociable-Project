@@ -109,7 +109,7 @@ function Dashboard() {
         });
       }
     } catch (error) {
-      setErrorSB(true);
+      // setErrorSB(true);
 
       setNotification({
         color: "error",

@@ -65,7 +65,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     firstName: "",
     bio: "",
     lastName: "",
-    email: "",
+    url: "",
   });
 
   const [open, setOpen] = React.useState(false);
@@ -136,7 +136,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     data.append("firstName", editUser.firstName);
     data.append("lastName", editUser.lastName);
     data.append("bio", editUser.bio);
-    data.append("email", editUser.email);
+    data.append("url", editUser.url);
     selectedImage && data.append("image", URL.createObjectURL(selectedImage));
     var object = {};
     data.forEach((value, key) => (object[key] = value));
@@ -228,9 +228,9 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
         <MDBox>
           {renderItems}
           <MDBox display="flex" py={1} pr={2}>
-            <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
+            {/* <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
               social: &nbsp;
-            </MDTypography>
+            </MDTypography> */}
             {renderSocial}
           </MDBox>
         </MDBox>
@@ -302,9 +302,9 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
             <Grid item xs={6} sm={6}>
               <MDInput
                 type="text"
-                name="email"
-                label="Email"
-                value={editUser.email}
+                name="url"
+                label="Url"
+                value={editUser.url}
                 onChange={(event) => handleChange(event)}
                 fullWidth
               />
