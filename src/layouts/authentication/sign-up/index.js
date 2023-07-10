@@ -72,7 +72,6 @@ function Cover() {
   };
 
   const handleSignup = async () => {
-    debugger;
     const validationErrors = {};
     try {
       await formSchema.validate(signUp, { abortEarly: false });

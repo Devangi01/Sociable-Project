@@ -19,6 +19,7 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 import { MainContext } from "context";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const FollowPost = (props) => {
+  const navigate = useNavigate();
   const classes = useStyles();
   const { mainstate, setMainstate } = useContext(MainContext);
   const encodedToken = localStorage.getItem("token");
@@ -103,7 +105,7 @@ const FollowPost = (props) => {
 
       if (response.status === 200) {
         //   getAllPost(response.data.posts[response.data.posts.length - 1].username);
-        console.log("Final list", response);
+
         setMainstate({
           ...mainstate,
           userFollowlist: response.data.user.following,
@@ -137,6 +139,28 @@ const FollowPost = (props) => {
       setOpen(true);
     }
   };
+
+  const showProfile = async () => {
+    try {
+      const response = await axios.get(`api/users/${_id}`);
+
+      if (response.status === 200) {
+        setMainstate({ ...mainstate, selectedUser: response.data.user });
+
+        navigate("/profile", { replace: true });
+      }
+    } catch (error) {
+      setErrorSB(true);
+      // setNotification({
+      //   color: "error",
+      //   icon: "warning",
+      //   title: error.response.status + " " + error.response.statusText + " ",
+      //   content: error.response.data.errors,
+      // });
+      // setOpen(true);
+    }
+  };
+
   return (
     <MDBox key={_id}>
       <Grid
@@ -168,15 +192,16 @@ const FollowPost = (props) => {
           </MDBox>
         </Grid>
         <Grid item md={4} className={classes.name}>
-          <MDTypography variant="button" fontWeight="bold" textTransform="capitalize">
+          <MDTypography
+            variant="button"
+            fontWeight="bold"
+            textTransform="capitalize"
+            onClick={() => showProfile()}
+          >
             {firstName} {lastName}
             <br />
             <small style={{ color: "#a09699" }}>@{username}</small>
           </MDTypography>
-          {/* 
-          {firstName} {lastName}
-          <br />
-          <small style={{ color: "#a09699" }}>@{username}</small> */}
         </Grid>
         <Grid item md={4}>
           {ifFollow.length > 0 ? (

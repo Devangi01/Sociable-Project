@@ -85,8 +85,6 @@ const Billing = () => {
               <Box
                 sx={{
                   width: "100%",
-                  height: "420px",
-                  overflow: "auto",
                   backgroundColor: "#f0f2f5",
                   borderRadius: "10px",
                 }}

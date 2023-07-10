@@ -64,8 +64,6 @@ export const getAllUserPostsHandler = function (schema, request) {
  * */
 
 export const createPostHandler = function (schema, request) {
-  debugger;
-
   const user = requiresAuth.call(this, request);
 
   try {
@@ -113,7 +111,6 @@ export const createPostHandler = function (schema, request) {
  * body contains { postData }
  * */
 export const editPostHandler = function (schema, request) {
-  debugger;
   const user = requiresAuth.call(this, request);
   try {
     if (!user) {

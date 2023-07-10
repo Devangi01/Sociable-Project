@@ -40,20 +40,19 @@ import { MainContext } from "context";
 
 function Overview() {
   const { mainstate, setMainstate } = useContext(MainContext);
-  console.log(mainstate.loggedUser);
-  const { firstName, lastName, url, location } = mainstate.loggedUser;
+  const { firstName, lastName, url, location } = mainstate.selectedUser;
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox mb={2} />
-      <Header data={mainstate.loggedUser}>
+      <Header data={mainstate.selectedUser}>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
             <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
               <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
               <ProfileInfoCard
                 title="profile information"
-                description={mainstate.loggedUser.bio}
+                description={mainstate.selectedUser.bio}
                 info={{
                   fullName: firstName + lastName,
                   url: url,

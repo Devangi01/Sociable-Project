@@ -131,7 +131,6 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   };
 
   const handleClick = async () => {
-    debugger;
     const data = new FormData();
     data.append("firstName", editUser.firstName);
     data.append("lastName", editUser.lastName);
@@ -155,8 +154,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
           },
         }
       );
-      debugger;
-      console.log("editprofile", response);
+
       if (response.status === 201) {
         // alert("Update");
         setMainstate({ ...mainstate, loggedUser: response.data.user });
@@ -198,9 +196,6 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
     };
 
     if (file) {
-      debugger;
-      console.log(file);
-
       reader.readAsDataURL(file);
     }
   };
@@ -210,11 +205,13 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
         <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
           {title}
         </MDTypography>
-        <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
-          <Tooltip title={action.tooltip} placement="top">
-            <Icon onClick={handleEditProfile}>edit</Icon>
-          </Tooltip>
-        </MDTypography>
+        {mainstate.loggedUser._id === mainstate.selectedUser._id && (
+          <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
+            <Tooltip title={action.tooltip} placement="top">
+              <Icon onClick={handleEditProfile}>edit</Icon>
+            </Tooltip>
+          </MDTypography>
+        )}
       </MDBox>
       <MDBox p={2}>
         <MDBox mb={2} lineHeight={1}>

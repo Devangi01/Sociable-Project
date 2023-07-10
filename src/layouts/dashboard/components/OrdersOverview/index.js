@@ -88,7 +88,6 @@ const OrdersOverview = () => {
   const getAllUserInfo = async () => {
     try {
       const response = await axios.get(`api/users`);
-      console.log("order", response);
 
       if (response.status === 200) {
         setMainstate({ ...mainstate, allUserlist: response.data.users });
@@ -104,7 +103,6 @@ const OrdersOverview = () => {
       // setOpen(true);
     }
   };
-  console.log("alluserlist", mainstate);
 
   useEffect(() => {
     getAllUserInfo();
@@ -124,7 +122,6 @@ const OrdersOverview = () => {
 
       if (response.status === 200) {
         //   getAllPost(response.data.posts[response.data.posts.length - 1].username);
-        console.log("Follow list", response);
 
         setNotification({
           color: "success",

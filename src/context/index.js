@@ -103,8 +103,9 @@ const MainProvider = ({ children }) => {
     userFollowlist: [],
     loggedUser: {},
     token: false,
+    selectedUser: {},
   });
-  console.log("contextvalue", mainstate);
+
   return (
     <MainContext.Provider value={{ mainstate, setMainstate }}> {children}</MainContext.Provider>
   );

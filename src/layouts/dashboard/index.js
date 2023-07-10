@@ -77,7 +77,6 @@ function Dashboard() {
     var object = {};
     data.forEach((value, key) => (object[key] = value));
     var jsonData = JSON.stringify(object);
-    debugger;
     try {
       const response = await axios.post(`/api/posts`, jsonData, {
         headers: {
@@ -89,10 +88,9 @@ function Dashboard() {
       });
 
       if (response.status === 201) {
-        debugger;
         //getAllPost(response.data.posts[response.data.posts.length - 1].username);
         getAllUserPost();
-        console.log("selectedImage", selectedImage);
+
         setPostContent("");
         setSelectedImage(null);
         setDisplayCancleIcon(false);
@@ -139,7 +137,6 @@ function Dashboard() {
 
       if (response.status === 200) {
         setMainstate({ ...mainstate, displayAllUserPostData: response.data.posts });
-        console.log("Dashboard Response", response);
       }
     } catch (error) {
       // setErrorSB(true);
@@ -153,13 +150,11 @@ function Dashboard() {
       setOpen(true);
     }
   };
-  console.log("dashboard", mainstate.displayAllUserPostData);
+
   const handleFilter = (filterType) => {
     filterType === "trending"
       ? setFilterButton({ trending: true, latest: false })
       : setFilterButton({ trending: false, latest: true });
-    console.log("Filter type", filterType);
-    console.log("Filter type", filterButton);
 
     if (filterType === "trending") {
       mainstate.displayAllUserPostData.sort((a, b) => b.likes.likeCount - a.likes.likeCount);
@@ -168,10 +163,7 @@ function Dashboard() {
         (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
       );
     }
-    console.log("Filter type", mainstate.displayAllUserPostData);
   };
-
-  console.log("Dashboard", mainstate.displayPostData);
 
   const handleImageChange = (event) => {
     setEditPostInfoState({
@@ -187,7 +179,6 @@ function Dashboard() {
   };
 
   const editPost = async () => {
-    debugger;
     const data = new FormData();
     data.append("content", postcontent);
     selectedImage &&
@@ -198,7 +189,6 @@ function Dashboard() {
     var object = {};
     data.forEach((value, key) => (object[key] = value));
     var jsonData = JSON.stringify(object);
-    debugger;
     try {
       const response = await axios.post(`/api/posts/edit/${editPostInfoState.editID}`, jsonData, {
         headers: {
@@ -210,7 +200,6 @@ function Dashboard() {
       });
 
       if (response.status === 201) {
-        debugger;
         //getAllPost(response.data.posts[response.data.posts.length - 1].username);
         getAllUserPost();
         setEditPostInfoState({

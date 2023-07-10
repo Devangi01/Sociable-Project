@@ -41,7 +41,6 @@ import burceMars from "assets/images/bruce-mars.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
 function Header({ children, data }) {
-  console.log("children", data);
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
   const { mainstate, setMainstate } = useContext(MainContext);
@@ -49,8 +48,6 @@ function Header({ children, data }) {
   const [previewImage, setPreviewImage] = useState(null);
 
   // const userData = props.data;
-
-  console.log("Inside The Header", mainstate.loggedUser);
 
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
@@ -105,7 +102,12 @@ function Header({ children, data }) {
       >
         <Grid container spacing={3} alignItems="center">
           <Grid item>
-            <MDAvatar src={mainstate.loggedUser.image} alt="profile-image" size="xl" shadow="sm" />
+            <MDAvatar
+              src={mainstate.selectedUser.image}
+              alt="profile-image"
+              size="xl"
+              shadow="sm"
+            />
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>

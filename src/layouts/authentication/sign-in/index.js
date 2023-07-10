@@ -79,13 +79,13 @@ function Basic() {
         },
       });
       if (response.status === 200) {
-        console.log("loginresponse", response);
         localStorage.setItem("token", response.data.encodedToken);
         setMainstate({
           ...mainstate,
           displayPostData: [],
           userFollowlist: [],
           loggedUser: response.data.foundUser,
+          selectedUser: response.data.foundUser,
           token: true,
         });
         // setMainState({ ...mainState, isLoggedIn: true }); // Update isLoggedIn state in MainContext

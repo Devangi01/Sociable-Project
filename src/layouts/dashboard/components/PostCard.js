@@ -41,9 +41,6 @@ const PostCard = (props) => {
 
   const { _id, content, likes, firstName, lastName, createdAt, updatedAt, username, image } =
     props.cardData;
-  console.log("Likes In PostCard", likes);
-  console.log("Username In PostCard", username);
-  console.log("Main Context", mainstate.loggedUser);
 
   const encodedToken = localStorage.getItem("token");
 
@@ -149,7 +146,6 @@ const PostCard = (props) => {
   };
 
   const handlePostLikeClick = async (id, checkStatus) => {
-    debugger;
     try {
       const response = await axios.post(
         checkStatus === "like" ? `/api/posts/like/${id}` : `/api/posts/dislike/${id}`,
@@ -163,7 +159,6 @@ const PostCard = (props) => {
       if (response.status === 201) {
         props.getAllUserPost();
         // getAllUserPost();
-        console.log("After Like", response);
       }
     } catch (error) {
       // setErrorSB(true);
@@ -185,7 +180,6 @@ const PostCard = (props) => {
           authorization: encodedToken, // passing token as an authorization header
         },
       });
-      debugger;
       if (response.status === 201) {
         props.getAllUserPost();
         setNotification({
@@ -215,7 +209,7 @@ const PostCard = (props) => {
 
   const checkISLiked =
     likes.likedBy.filter((data) => data.username === mainstate.loggedUser.username).length > 0;
-  console.log("Check Result", checkISLiked);
+
   var binaryData = [];
   binaryData.push(image);
 
