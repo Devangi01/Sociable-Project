@@ -238,7 +238,9 @@ function Dashboard() {
     setSelectedImage(null);
     setDisplayCancleIcon(false);
   };
-
+  useEffect(() => {
+    getAllUserPost();
+  }, []);
   return (
     <DashboardLayout>
       <DashboardNavbar />
