@@ -48,7 +48,6 @@ import SignUp from "layouts/authentication/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import { PrivateRoute } from "components/PrivateRoute";
-
 const routes = [
   {
     type: "collapse",
@@ -101,6 +100,45 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+];
+
+export const routesWithoutSignin = [
+  {
+    type: "collapse",
+    name: "Home",
+    key: "dashboard",
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: "/dashboard",
+    component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Explore",
+    key: "tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/explore",
+    component: <Tables />,
+  },
+  {
+    type: "collapse",
+    name: "BookMark",
+    key: "billing",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/bookmark",
+    component: <Billing />,
+  },
+  {
+    type: "collapse",
+    name: "Profile",
+    key: "profile",
+    icon: <Icon fontSize="small">person</Icon>,
+    route: "/profile",
+    component: (
+      <PrivateRoute>
+        <Profile />
+      </PrivateRoute>
+    ),
   },
 ];
 

@@ -70,7 +70,6 @@ function Dashboard() {
   });
 
   const addNewPost = async () => {
-    debugger;
     const data = new FormData();
     data.append("content", postcontent);
     selectedImage && data.append("image", URL.createObjectURL(selectedImage));
@@ -238,9 +237,9 @@ function Dashboard() {
     setSelectedImage(null);
     setDisplayCancleIcon(false);
   };
-  useEffect(() => {
-    getAllUserPost();
-  }, []);
+  // useEffect(() => {
+  //   getAllUserPost();
+  // }, []);
   return (
     <DashboardLayout>
       <DashboardNavbar />
